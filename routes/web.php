@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\WeatherController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +23,14 @@ Route::get(
     '/sync-countries',
     [
         CountryController::class,
+        'sync'
+    ]
+);
+
+Route::get(
+    '/sync-weather',
+    [
+        WeatherController::class,
         'sync'
     ]
 );

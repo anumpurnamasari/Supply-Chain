@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\WeatherCache;
 
 class Country extends Model
 {
@@ -21,4 +22,11 @@ class Country extends Model
         'last_synced'
 
     ];
+
+    public function weather()
+    {
+        return $this->hasOne(
+            WeatherCache::class
+        );
+    }
 }

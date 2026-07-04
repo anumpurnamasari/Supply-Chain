@@ -1,30 +1,22 @@
 <?php
 
-namespace App\Services;
+namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use App\Models\Country;
-use Illuminate\Support\Facades\Http;
 
-class CountryService
+class CountrySeeder extends Seeder
 {
-    public function syncCountries()
+    public function run(): void
     {
-        $response = Http::get('https://restcountries.com/v3.1/all?fields=name,cca3,capital,region,currencies,population,latlng,flags'
-        );
+        $path = database_path('data/countries.json');
 
-        dd(
-            $response->status(),
-            $response->body()
-        );
-
-        if (!$response->successful()) {
-            throw new \Exception('REST Countries API gagal diakses.');
+        if (!file_exists($path)) {
+            $this->command->error('countries.json tidak ditemukan.');
+            return;
         }
 
-        $countries = $response->json();
-        dd($countries);
-
-        $count = 0;
+        $countries = json_decode(file_get_contents($path), true);
 
         foreach ($countries as $item) {
 
@@ -37,11 +29,9 @@ class CountryService
             }
 
             Country::updateOrCreate(
-
                 [
-                    'country_code' => $item['cca3']
+                    'country_code' => $item['cca3'],
                 ],
-
                 [
                     'country_name'    => $item['name']['common'] ?? null,
                     'capital'         => $item['capital'][0] ?? null,
@@ -55,10 +45,8 @@ class CountryService
                     'last_synced'     => now(),
                 ]
             );
-
-            $count++;
         }
 
-        return $count;
+        $this->command->info('Countries berhasil diimport.');
     }
 }
