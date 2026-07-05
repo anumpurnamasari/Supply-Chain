@@ -3,30 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\WeatherCache;
 
 class Country extends Model
 {
     protected $fillable = [
-
-        'country_code',
-        'country_name',
-        'capital',
-        'region',
-        'currency',
-        'currency_symbol',
-        'population',
+        'name',
+        'code',
         'latitude',
         'longitude',
-        'flag',
-        'last_synced'
-
+        'currency'
     ];
 
     public function weather()
     {
-        return $this->hasOne(
-            WeatherCache::class
-        );
+        return $this->hasMany(WeatherData::class);
     }
 }
