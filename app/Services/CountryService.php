@@ -2,63 +2,30 @@
 
 namespace App\Services;
 
-use App\Models\Country;
 use Illuminate\Support\Facades\Http;
+
 
 class CountryService
 {
-    public function syncCountries()
+
+
+    public function getCountry($name)
     {
-        $response = Http::get('https://restcountries.com/v3.1/all?fields=name,cca3,capital,region,currencies,population,latlng,flags'
+
+
+        $response =
+        Http::post(
+            "https://countriesnow.space/api/v0.1/countries/population",
+            [
+                "country" => $name
+            ]
         );
 
-        dd(
-            $response->status(),
-            $response->body()
-        );
 
-        if (!$response->successful()) {
-            throw new \Exception('REST Countries API gagal diakses.');
-        }
+        return $response->json();
 
-        $countries = $response->json();
-        dd($countries);
 
-        $count = 0;
-
-        foreach ($countries as $item) {
-
-            $currencyCode = null;
-            $currencySymbol = null;
-
-            if (!empty($item['currencies'])) {
-                $currencyCode = array_key_first($item['currencies']);
-                $currencySymbol = $item['currencies'][$currencyCode]['symbol'] ?? null;
-            }
-
-            Country::updateOrCreate(
-
-                [
-                    'country_code' => $item['cca3']
-                ],
-
-                [
-                    'country_name'    => $item['name']['common'] ?? null,
-                    'capital'         => $item['capital'][0] ?? null,
-                    'region'          => $item['region'] ?? null,
-                    'currency'        => $currencyCode,
-                    'currency_symbol' => $currencySymbol,
-                    'population'      => $item['population'] ?? null,
-                    'latitude'        => $item['latlng'][0] ?? null,
-                    'longitude'       => $item['latlng'][1] ?? null,
-                    'flag'            => $item['flags']['png'] ?? null,
-                    'last_synced'     => now(),
-                ]
-            );
-
-            $count++;
-        }
-
-        return $count;
     }
+
+
 }

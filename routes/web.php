@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,19 +21,24 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get(
-    '/sync-countries',
-    [
-        CountryController::class,
-        'sync'
-    ]
+
+'/country/sync',
+
+[
+CountryController::class,
+'sync'
+]
+
 );
 
 Route::get(
-    '/sync-weather',
-    [
-        WeatherController::class,
-        'sync'
-    ]
-);
+    '/weather/sync/{country}',
+    [WeatherController::class,'sync']
+)->name('weather.sync');
+
+Route::get(
+    '/dashboard',
+    [DashboardController::class,'index']
+)->name('dashboard');
 
 require __DIR__.'/auth.php';

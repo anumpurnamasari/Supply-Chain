@@ -11,7 +11,10 @@ class Country extends Model
         'code',
         'latitude',
         'longitude',
-        'currency'
+        'currency',
+        'region',
+        'population',
+        'flag'
     ];
 
     public function weather()
