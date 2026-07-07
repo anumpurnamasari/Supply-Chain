@@ -9,6 +9,10 @@ class RiskScore extends Model
     protected $fillable = [
         'country_id',
         'weather_score',
+        'currency_score',
+        'inflation_score',
+        'news_score',
+        'total_score',
         'risk_level'
     ];
 

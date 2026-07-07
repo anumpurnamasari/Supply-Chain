@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\EconomicController;
+use App\Http\Controllers\NewsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,5 +43,38 @@ Route::get(
     '/dashboard',
     [DashboardController::class,'index']
 )->name('dashboard');
+
+Route::get(
+
+'/currency/sync',
+
+[
+CurrencyController::class,
+'sync'
+]
+
+);
+
+Route::get(
+
+'/economic/sync',
+
+[
+EconomicController::class,
+'sync'
+]
+
+);
+
+Route::get(
+
+'/news/sync',
+
+[
+NewsController::class,
+'sync'
+]
+
+);
 
 require __DIR__.'/auth.php';
