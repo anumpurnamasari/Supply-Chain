@@ -101,19 +101,33 @@ color:white;
 
 .stat-card{
 
-background:white;
-border-radius:15px;
-padding:25px;
-text-align:center;
-height:150px;
+background:#ffffff;
+
+height:125px;
+
+border-radius:16px;
+
+padding:12px;
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+justify-content:center;
+
 box-shadow:0 5px 15px #0003;
 
 }
 
 
+
 .stat-card p{
 
-color:#555;
+font-size:15px;
+
+color:#333;
+
+margin-bottom:8px;
 
 }
 
@@ -121,43 +135,101 @@ color:#555;
 
 .stat-card h2{
 
-font-weight:bold;
+font-size:32px;
+
+font-weight:800;
+
 color:#073B4C;
+
+margin:0;
+
+}
+
+
+
+.stat-card span{
+
+font-size:13px;
+
+color:#222;
+
+margin-top:5px;
 
 }
 
 .country-card{
 
 background:white;
-padding:25px;
-border-radius:20px;
-box-shadow:0 5px 20px #0003;
+height:115px;
+padding:15px 25px;
+border-radius:18px;
+
+display:flex;
+align-items:center;
+
+box-shadow:0 5px 15px #0003;
+
+}
+
+
+.country-card img{
+
+width:70px;
 
 }
 
 
 .country-card h3{
 
-color:#073B4C;
+font-size:26px;
 font-weight:bold;
+color:#073B4C;
+margin:0;
 
 }
 
 
 .country-card p{
 
+font-size:14px;
 color:#777;
+margin:0;
 
 }
 
 
+
 .panel{
 
+
 background:white;
-border-radius:15px;
-padding:20px;
-margin-top:20px;
-height:420px;
+
+height:300px;
+
+border-radius:16px;
+
+padding:15px;
+
+margin-top:15px;
+
+overflow:hidden;
+
+
+box-shadow:0 5px 15px #0003;
+
+}
+
+
+
+.panel h5{
+
+
+font-size:20px;
+
+font-weight:bold;
+
+color:#222;
+
 
 }
 
@@ -165,17 +237,22 @@ height:420px;
 
 #map{
 
-height:330px;
+
+height:220px;
+
 width:100%;
-border-radius:15px;
+
+border-radius:12px;
+
 
 }
 
 
 
+
 #riskChart{
 
-height:300px!important;
+height:220px!important;
 
 }
 
@@ -381,22 +458,120 @@ $country->population ?? 0
 
 <!-- CARD -->
 
+<div class="row mt-4">
+
+
+<div class="col-md-3 col-lg-3 mb-3">
+
+<div class="stat-card">
+
+<p>
+🌦 Weather Risk
+</p>
+
+<h2>
+{{ $risk->weather_score ?? 0 }}%
+</h2>
+
+<span>
+{{ $risk->risk_level ?? 'LOW' }}
+</span>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-3 col-lg-3 mb-3">
+
+<div class="stat-card">
+
+<p>
+🌡 Temperature
+</p>
+
+<h2>
+
+{{ $weather->temperature ?? 0 }}°
+
+</h2>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-3 col-lg-3 mb-3">
+
+<div class="stat-card">
+
+<p>
+🌧 Rainfall
+</p>
+
+<h2>
+
+{{ $weather->rainfall ?? 0 }}
+
+</h2>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-3 col-lg-3 mb-3">
+
+<div class="stat-card">
+
+<p>
+💨 Wind Speed
+</p>
+
+<h2>
+
+{{ $weather->wind_speed ?? 0 }}
+
+</h2>
+
+</div>
+
+</div>
+
+
+</div>
+
+<!-- ==============================
+BUSINESS INTELLIGENCE CARD
+============================== -->
+
 
 <div class="row mt-4">
 
 
 
-<div class="col-md-3">
+<div class="col-md-3 col-lg-3 mb-3">
 
 <div class="stat-card">
 
 
-<p>Weather Risk</p>
+<p>
+🚨 Total Risk
+</p>
 
 
 <h2>
 
-{{ $risk->weather_score ?? 0 }}%
+{{ $risk->total_score ?? 0 }}%
 
 </h2>
 
@@ -416,44 +591,31 @@ $country->population ?? 0
 
 
 
-<div class="col-md-3">
 
-<div class="stat-card">
-
-<p>Temperature</p>
-
-
-<h2>
-
-{{ $weather->temperature ?? 0 }}°
-
-</h2>
-
-
-</div>
-
-</div>
-
-
-
-
-
-
-<div class="col-md-3">
+<div class="col-md-3 col-lg-3 mb-3">
 
 <div class="stat-card">
 
 
-<p>Rainfall</p>
+<p>
+💱 Currency Rate
+</p>
 
 
 <h2>
 
-{{ $weather->rainfall ?? 0 }}
+{{ number_format($currency->exchange_rate ?? 0) }}
 
 </h2>
 
 
+<span>
+
+{{ $currency->currency ?? 'USD' }}
+
+</span>
+
+
 </div>
 
 </div>
@@ -463,29 +625,79 @@ $country->population ?? 0
 
 
 
-<div class="col-md-3">
+<div class="col-md-3 col-lg-3 mb-3">
 
 <div class="stat-card">
 
 
-<p>Wind Speed</p>
+<p>
+📈 Inflation
+</p>
 
 
 <h2>
 
-{{ $weather->wind_speed ?? 0 }}
+{{ $economic->inflation ?? 0 }}%
 
 </h2>
 
 
+<span>
+
+World Bank
+
+</span>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="col-md-3 col-lg-3 mb-3">
+
+<div class="stat-card">
+
+
+<p>
+💰 GDP
+</p>
+
+
+<h2 style="font-size:32px">
+
+
+${{
+number_format(
+($economic->gdp ?? 0)
+/1000000000,
+1
+)
+}}B
+
+
+</h2>
+
+
+<span>
+
+GDP Value
+
+</span>
+
+
 </div>
 
 </div>
 
 
+
+
 </div>
-
-
 
 
 
@@ -535,6 +747,21 @@ $country->population ?? 0
 <div id="map"></div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
 </div>
 
 
@@ -542,6 +769,133 @@ $country->population ?? 0
 
 
 
+
+<div class="row">
+
+
+<div class="col-md-6">
+
+
+<div class="panel">
+
+
+<h5>
+📰 News Intelligence
+</h5>
+
+
+@foreach($news as $item)
+
+
+<div class="mb-3">
+
+
+<b>
+
+{{ $item->title }}
+
+</b>
+
+
+<br>
+
+
+Source:
+
+{{ $item->source }}
+
+
+<br>
+
+
+Sentiment:
+
+
+<span>
+
+
+{{ $item->sentiment }}
+
+
+</span>
+
+
+</div>
+
+
+<hr>
+
+
+@endforeach
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="panel">
+
+
+<h5>
+⚓ Port Monitoring
+</h5>
+
+
+@foreach($ports as $port)
+
+
+<p>
+
+
+<b>
+
+{{ $port->name }}
+
+</b>
+
+
+<br>
+
+
+{{ $port->city }}
+
+
+<br>
+
+
+Status:
+
+
+{{ $port->status }}
+
+
+<br>
+
+
+Risk:
+
+
+{{ $port->risk_level }}
+
+
+</p>
+
+
+<hr>
+
+
+@endforeach
+
+
+
 </div>
 
 
@@ -549,10 +903,6 @@ $country->population ?? 0
 
 
 </div>
-
-
-</div>
-
 
 
 
@@ -562,7 +912,10 @@ $country->population ?? 0
 <!-- SCRIPT HARUS DI BAWAH -->
 
 
+
+
 <script>
+
 
 
 document.addEventListener(
@@ -572,7 +925,7 @@ function(){
 
 
 // ==========================
-// CHART
+// CHART JS - RISK TREND
 // ==========================
 
 
@@ -581,6 +934,9 @@ document.getElementById(
 'riskChart'
 );
 
+
+
+if(ctx){
 
 
 new Chart(ctx,{
@@ -592,32 +948,24 @@ type:'line',
 data:{
 
 
-labels:[
-
-'Indonesia',
-'China',
-'Germany',
-'Australia',
-'USA'
-
-],
+labels:
+{!! json_encode(
+array_keys($riskChart)
+) !!},
 
 
 datasets:[{
 
 
-label:'Risk Score',
+label:
+'Supply Chain Risk Score',
 
 
-data:[
+data:
 
-20,
-60,
-25,
-45,
-70
-
-],
+{!! json_encode(
+array_values($riskChart)
+) !!},
 
 
 borderWidth:3,
@@ -629,102 +977,285 @@ tension:0.4
 }]
 
 
+},
+
+
+
+options:{
+
+
+responsive:true,
+
+
+plugins:{
+
+
+legend:{
+
+display:true
+
+}
+
+
+},
+
+
+scales:{
+
+
+y:{
+
+
+beginAtZero:true,
+
+
+max:100
+
+
+}
+
+
+}
+
+
 }
 
 
 });
 
 
+}
+
+
 
 
 
 
 
 // ==========================
-// MAP
+// LEAFLET GLOBAL MAP
 // ==========================
 
 
 var map =
-L.map('map')
+L.map(
+'map'
+)
 .setView(
-[20,0],
+[15,50],
 2
 );
 
 
 
+
 L.tileLayer(
 
-'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-
-).addTo(map);
-
-
-
-
-let countries=[
-
+'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 
 {
-name:'Indonesia',
-lat:-6.2,
-lng:106.8,
-risk:'LOW'
-},
 
+maxZoom:19
 
-
-{
-name:'China',
-lat:35.8,
-lng:104.1,
-risk:'MEDIUM'
-},
-
-
-
-{
-name:'Germany',
-lat:51,
-lng:10,
-risk:'LOW'
 }
 
-
-];
-
-
-
-
-
-countries.forEach(
-country=>{
-
-
-L.marker(
-[
-country.lat,
-country.lng
-]
 )
+.addTo(map);
+
+
+
+
+
+
+
+// ==========================
+// PORT MARKER DATABASE
+// ==========================
+
+
+let ports = {!! json_encode($ports ?? [])!!};
+
+
+
+
+ports.forEach(function(port){
+
+
+
+let latitude =
+parseFloat(
+port.latitude
+);
+
+
+
+let longitude =
+parseFloat(
+port.longitude
+);
+
+
+
+
+if(
+!isNaN(latitude)
+&&
+!isNaN(longitude)
+){
+
+
+
+L.marker([
+
+latitude,
+
+longitude
+
+])
 
 .addTo(map)
+
 
 .bindPopup(
 
 `
-<b>${country.name}</b>
+
+<h6>
+
+⚓ ${port.name}
+
+</h6>
+
+
+<hr>
+
+
+<b>City:</b>
+
+${port.city}
+
+
 <br>
-Risk Level :
-${country.risk}
+
+
+<b>Status:</b>
+
+${port.status}
+
+
+<br>
+
+
+<b>Risk Level:</b>
+
+${port.risk_level}
+
+
 `
 
 );
 
 
 
+}
+
+
+
 });
+
+
+
+
+
+
+
+
+
+// ==========================
+// COUNTRY MARKER DATABASE
+// ==========================
+
+
+@isset($country)
+
+
+
+let countryLat =
+parseFloat(
+"{{ $country->latitude }}"
+);
+
+
+let countryLng =
+parseFloat(
+"{{ $country->longitude }}"
+);
+
+
+
+
+if(
+!isNaN(countryLat)
+&&
+!isNaN(countryLng)
+){
+
+
+
+L.circleMarker(
+
+[
+
+countryLat,
+
+countryLng
+
+],
+
+{
+
+radius:10
+
+}
+
+)
+
+
+.addTo(map)
+
+
+.bindPopup(
+
+`
+
+🌍 <b>
+
+{{ $country->name }}
+
+</b>
+
+
+<br>
+
+
+Country Risk:
+
+{{ $risk->risk_level ?? 'LOW' }}
+
+
+`
+
+);
+
+
+}
+
+
+
+@endisset
+
+
+
 
 
 
