@@ -8,6 +8,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\EconomicController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PortController;
+use App\Http\Controllers\NewsPageController;
+use App\Http\Controllers\CompareController;
+use App\Http\Controllers\WatchlistController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,46 +40,69 @@ CountryController::class,
 );
 
 Route::get(
-    '/weather/sync/{country}',
-    [WeatherController::class,'sync']
-)->name('weather.sync');
-
-Route::get(
-    '/dashboard',
-    [DashboardController::class,'index']
-)->name('dashboard');
-
-Route::get(
-
-'/currency/sync',
-
+'/dashboard',
 [
-CurrencyController::class,
-'sync'
+DashboardController::class,
+'index'
 ]
+)
+->name('dashboard');
 
-);
-
-Route::get(
-
-'/economic/sync',
-
+Route::get('/weather',
 [
-EconomicController::class,
-'sync'
-]
+    WeatherController::class,
+    'index'
+])
+->name('weather');
 
-);
-
-Route::get(
-
-'/news/sync',
-
+Route::get('/currency',
 [
-NewsController::class,
-'sync'
-]
+    CurrencyController::class,
+    'index'
+])
+->name('currency');
 
-);
 
-require __DIR__.'/auth.php';
+
+Route::get('/ports',
+[
+    PortController::class,
+    'index'
+])
+->name('ports');
+
+
+
+Route::get('/news',
+[
+    NewsPageController::class,
+    'index'
+])
+->name('news');
+
+
+
+Route::get('/compare',
+[
+    CompareController::class,
+    'index'
+])
+->name('compare');
+
+
+
+Route::get('/watchlist',
+[
+    WatchlistController::class,
+    'index'
+])
+->name('watchlist');
+
+
+
+Route::get('/admin',
+[
+    AdminController::class,
+    'index'
+])
+->name('admin');
