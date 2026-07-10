@@ -1,572 +1,40 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.app')
 
-<head>
 
-<title>
-ChainPulse Dashboard
-</title>
+@section('content')
 
 
-<!-- BOOTSTRAP -->
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-rel="stylesheet">
+<!-- HEADER -->
 
+<div class="module-header">
 
-<!-- LEAFLET CSS -->
-<link
-rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-
-
-<!-- CHART JS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-<!-- LEAFLET JS -->
-<script
-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
-
-<style>
-
-
-body{
-
-background:#062c3d;
-font-family:'Segoe UI',sans-serif;
-
-}
-
-
-.sidebar{
-
-height:100vh;
-background:#073B4C;
-padding:25px;
-color:white;
-
-}
-
-
-.logo{
-
-font-size:25px;
-font-weight:bold;
-color:#06D6A0;
-
-}
-
-
-.menu{
-
-margin-top:30px;
-
-}
-
-
-.menu div{
-
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
-border:1px solid #118AB2;
-
-}
-
-
-.main{
-
-padding:25px;
-
-}
-
-
-.header{
-
-background:linear-gradient(
-90deg,#5cc6d0,#118AB2
-);
-
-padding:25px;
-border-radius:15px;
-color:white;
-
-}
-
-
-
-.stat-card{
-
-background:#ffffff;
-
-height:125px;
-
-border-radius:16px;
-
-padding:12px;
-
-display:flex;
-flex-direction:column;
-
-align-items:center;
-justify-content:center;
-
-box-shadow:0 5px 15px #0003;
-
-}
-
-
-
-.stat-card p{
-
-font-size:15px;
-
-color:#333;
-
-margin-bottom:8px;
-
-}
-
-
-
-.stat-card h2{
-
-font-size:32px;
-
-font-weight:800;
-
-color:#073B4C;
-
-margin:0;
-
-}
-
-
-
-.stat-card span{
-
-font-size:13px;
-
-color:#222;
-
-margin-top:5px;
-
-}
-
-.country-card{
-
-background:white;
-height:115px;
-padding:15px 25px;
-border-radius:18px;
-
-display:flex;
-align-items:center;
-
-box-shadow:0 5px 15px #0003;
-
-}
-
-
-.country-card img{
-
-width:70px;
-
-}
-
-
-.country-card h3{
-
-font-size:26px;
-font-weight:bold;
-color:#073B4C;
-margin:0;
-
-}
-
-
-.country-card p{
-
-font-size:14px;
-color:#777;
-margin:0;
-
-}
-
-
-
-.panel{
-
-
-background:white;
-
-height:300px;
-
-border-radius:16px;
-
-padding:15px;
-
-margin-top:15px;
-
-overflow:hidden;
-
-
-box-shadow:0 5px 15px #0003;
-
-}
-
-
-
-.panel h5{
-
-
-font-size:20px;
-
-font-weight:bold;
-
-color:#222;
-
-
-}
-
-
-
-#map{
-
-
-height:220px;
-
-width:100%;
-
-border-radius:12px;
-
-
-}
-
-
-
-
-#riskChart{
-
-height:220px!important;
-
-}
-
-
-</style>
-
-
-</head>
-
-
-
-<body>
-
-
-
-<div class="container-fluid">
-
-
-<div class="row">
-
-
-
-<!-- SIDEBAR -->
-
-
-<div class="col-md-2 sidebar">
-
-
-<div class="logo">
-
-🌐 ChainPulse
-
-</div>
-
-
-
-<div class="menu">
-
-
-<div>Dashboard</div>
-
-<div>Weather Risk</div>
-
-<div>Currency Impact</div>
-
-<div>Port Monitoring</div>
-
-<div>News Intelligence</div>
-
-<div>Country Compare</div>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- MAIN -->
-
-
-<div class="col-md-10 main">
-
-
-
-<div class="header">
-
-
-<h3>
-Comprehensive Supply Chain Risk Dashboard
-</h3>
-
+<h2>
+🌐 ChainPulse Command Center
+</h2>
 
 <p>
-Real-Time Global Logistics Intelligence Platform
+Global Supply Chain Risk Intelligence Overview
 </p>
 
-
 </div>
 
-<!-- COUNTRY PROFILE -->
 
 
-<div class="row mt-4">
 
 
-<div class="col-md-12">
+<!-- KPI SUMMARY -->
 
 
-<div class="country-card">
-
-
-<div class="row align-items-center">
-
-
-<div class="col-md-2 text-center">
-
-
-<img
-src="{{ $country->flag ?? '' }}"
-width="100">
-
-
-</div>
-
+<div class="row g-4">
 
 
 <div class="col-md-3">
 
-
-<h3>
-
-{{ $country->name ?? 'Unknown Country' }}
-
-</h3>
-
-
-<p>
-Global Monitoring Area
-</p>
-
-
-</div>
-
-
-
-
-
-<div class="col-md-2">
-
-
-<b>
-Region
-</b>
-
-<br>
-
-
-{{ $country->region ?? '-' }}
-
-
-</div>
-
-
-
-
-
-<div class="col-md-2">
-
-
-<b>
-Currency
-</b>
-
-<br>
-
-
-{{ $country->currency ?? '-' }}
-
-
-</div>
-
-
-
-
-
-
-<div class="col-md-3">
-
-
-<b>
-Population
-</b>
-
-<br>
-
-
-{{ number_format(
-$country->population ?? 0
-) }}
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-
-<!-- CARD -->
-
-<div class="row mt-4">
-
-
-<div class="col-md-3 col-lg-3 mb-3">
-
-<div class="stat-card">
-
-<p>
-🌦 Weather Risk
-</p>
-
-<h2>
-{{ $risk->weather_score ?? 0 }}%
-</h2>
-
-<span>
-{{ $risk->risk_level ?? 'LOW' }}
-</span>
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="col-md-3 col-lg-3 mb-3">
-
-<div class="stat-card">
-
-<p>
-🌡 Temperature
-</p>
-
-<h2>
-
-{{ $weather->temperature ?? 0 }}°
-
-</h2>
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="col-md-3 col-lg-3 mb-3">
-
-<div class="stat-card">
-
-<p>
-🌧 Rainfall
-</p>
-
-<h2>
-
-{{ $weather->rainfall ?? 0 }}
-
-</h2>
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="col-md-3 col-lg-3 mb-3">
-
-<div class="stat-card">
-
-<p>
-💨 Wind Speed
-</p>
-
-<h2>
-
-{{ $weather->wind_speed ?? 0 }}
-
-</h2>
-
-</div>
-
-</div>
-
-
-</div>
-
-<!-- ==============================
-BUSINESS INTELLIGENCE CARD
-============================== -->
-
-
-<div class="row mt-4">
-
-
-
-<div class="col-md-3 col-lg-3 mb-3">
-
-<div class="stat-card">
-
-
-<p>
-🚨 Total Risk
-</p>
+<div class="card-box text-center">
+
+<h5>
+TOTAL RISK
+</h5>
 
 
 <h2>
@@ -578,7 +46,7 @@ BUSINESS INTELLIGENCE CARD
 
 <span>
 
-{{ $risk->risk_level ?? 'LOW' }}
+{{ $risk->risk_level ?? 'LOW RISK' }}
 
 </span>
 
@@ -591,27 +59,25 @@ BUSINESS INTELLIGENCE CARD
 
 
 
+<div class="col-md-3">
 
-<div class="col-md-3 col-lg-3 mb-3">
-
-<div class="stat-card">
+<div class="card-box text-center">
 
 
-<p>
-💱 Currency Rate
-</p>
+<h5>
+WEATHER STATUS
+</h5>
 
 
 <h2>
-
-{{ number_format($currency->exchange_rate ?? 0) }}
-
+🌦
 </h2>
 
 
 <span>
 
-{{ $currency->currency ?? 'USD' }}
+{{ $risk->weather_score ?? 0 }}%
+Risk
 
 </span>
 
@@ -625,26 +91,26 @@ BUSINESS INTELLIGENCE CARD
 
 
 
-<div class="col-md-3 col-lg-3 mb-3">
+<div class="col-md-3">
 
-<div class="stat-card">
+<div class="card-box text-center">
 
 
-<p>
-📈 Inflation
-</p>
+<h5>
+CURRENCY IMPACT
+</h5>
 
 
 <h2>
-
-{{ $economic->inflation ?? 0 }}%
-
+{{ number_format($currency->rate ?? 0) }}
 </h2>
 
 
 <span>
 
-World Bank
+{{ $currency->base_currency ?? 'USD' }}
+/
+{{ $currency->target_currency ?? 'IDR' }}
 
 </span>
 
@@ -658,46 +124,51 @@ World Bank
 
 
 
-<div class="col-md-3 col-lg-3 mb-3">
-
-<div class="stat-card">
+<div class="col-md-3">
 
 
-<p>
-💰 GDP
-</p>
+<div class="card-box text-center">
 
 
-<h2 style="font-size:32px">
+<h5>
+NEWS SENTIMENT
+</h5>
 
 
-${{
-number_format(
-($economic->gdp ?? 0)
-/1000000000,
-1
-)
-}}B
-
-
+<h2>
+{{ $news->first()->sentiment ?? 'Neutral' }}
 </h2>
 
 
 <span>
 
-GDP Value
+{{ $news->count() }}
+News Analyzed
 
 </span>
 
 
 </div>
 
+
+</div>
+
+
+
+
+
+
+
+
+
 </div>
 
 
 
 
-</div>
+
+
+
 
 
 
@@ -705,24 +176,24 @@ GDP Value
 <!-- CHART + MAP -->
 
 
-<div class="row">
-
+<div class="row g-4 mt-2">
 
 
 <div class="col-md-6">
 
 
-<div class="panel">
+<div class="card-box analytics-card">
 
 
 <h5>
-📊 Global Risk Trend
+📊 Risk Composition Analysis
 </h5>
 
 
 <canvas id="riskChart"></canvas>
 
 
+
 </div>
 
 
@@ -736,11 +207,11 @@ GDP Value
 <div class="col-md-6">
 
 
-<div class="panel">
+<div class="card-box analytics-card">
 
 
 <h5>
-🌍 Global Supply Risk Map
+🌍 Global Risk Monitoring Map
 </h5>
 
 
@@ -759,8 +230,6 @@ GDP Value
 
 
 
-</div>
-
 
 </div>
 
@@ -768,54 +237,50 @@ GDP Value
 </div>
 
 
+</div>
+
+<!-- INFO -->
 
 
-<div class="row">
-
+<div class="row g-4 mt-2">
 
 <div class="col-md-6">
 
-
-<div class="panel">
+<div class="card-box analytics-card">
 
 
 <h5>
-📰 News Intelligence
+🌎 ACTIVE COUNTRY
 </h5>
 
 
-@foreach($news as $item)
+
+<div class="country-monitor">
 
 
-<div class="mb-3">
+<div class="country-main">
 
 
-<b>
-
-{{ $item->title }}
-
-</b>
-
-
-<br>
+<img
+src="{{ $country->flag ?? '' }}"
+class="country-flag"
+>
 
 
-Source:
 
-{{ $item->source }}
-
-
-<br>
+<div>
 
 
-Sentiment:
+<h2>
+
+{{ $country->name ?? 'No Country' }}
+
+</h2>
 
 
 <span>
 
-
-{{ $item->sentiment }}
-
+Global Supply Monitoring
 
 </span>
 
@@ -823,16 +288,106 @@ Sentiment:
 </div>
 
 
-<hr>
+</div>
 
 
-@endforeach
 
+
+
+
+<div class="country-info">
+
+
+<div>
+
+<p>Region</p>
+
+<h4>
+
+{{ $country->region ?? '-' }}
+
+</h4>
+
+</div>
+
+
+
+
+
+<div>
+
+<p>Currency</p>
+
+<h4>
+
+{{ $country->currency ?? '-' }}
+
+</h4>
+
+</div>
+
+
+
+
+
+<div>
+
+<p>Population</p>
+
+<h4>
+
+{{ number_format($country->population ?? 0) }}
+
+</h4>
 
 </div>
 
 
 </div>
+
+
+
+
+
+
+
+<div class="risk-badge">
+
+
+<span>
+
+{{ $risk->risk_level ?? 'LOW' }}
+
+</span>
+
+
+<h3>
+
+{{ $risk->total_score ?? 0 }}%
+
+</h3>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
 
 
 
@@ -841,58 +396,61 @@ Sentiment:
 <div class="col-md-6">
 
 
-<div class="panel">
+<div class="card-box analytics-box">
 
 
 <h5>
-⚓ Port Monitoring
+🚨 Latest Intelligence Alert
 </h5>
 
 
-@foreach($ports as $port)
+
+<div class="alert-list">
+
+
+@forelse($news as $item)
+
+
+<div class="alert-item">
+
+
+<div>
+
+
+<h6>
+
+{{ $item->title }}
+
+</h6>
+
+
+<span>
+
+Sentiment :
+{{ $item->sentiment }}
+
+|
+Score :
+{{ $item->sentiment_score }}
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+@empty
 
 
 <p>
-
-
-<b>
-
-{{ $port->name }}
-
-</b>
-
-
-<br>
-
-
-{{ $port->city }}
-
-
-<br>
-
-
-Status:
-
-
-{{ $port->status }}
-
-
-<br>
-
-
-Risk:
-
-
-{{ $port->risk_level }}
-
-
+No intelligence data available
 </p>
 
 
-<hr>
-
-
-@endforeach
+@endforelse
 
 
 
@@ -902,162 +460,105 @@ Risk:
 </div>
 
 
-</div>
+@endsection
 
 
 
-
-
-
-<!-- SCRIPT HARUS DI BAWAH -->
-
-
+@section('script')
 
 
 <script>
 
 
-
-document.addEventListener(
-"DOMContentLoaded",
-function(){
-
+// ======================
+// CHART
+// ======================
 
 
-// ==========================
-// CHART JS - RISK TREND
-// ==========================
+new Chart(
 
-
-const ctx =
 document.getElementById(
 'riskChart'
-);
+),
 
 
-
-if(ctx){
-
-
-new Chart(ctx,{
+{
 
 
-type:'line',
+type:'doughnut',
+
 
 
 data:{
 
 
-labels:
-{!! json_encode(
-array_keys($riskChart)
-) !!},
+labels:[
+
+'Weather',
+
+'Inflation',
+
+'Currency',
+
+'News'
+
+],
+
 
 
 datasets:[{
 
 
-label:
-'Supply Chain Risk Score',
+data:[
+
+{{ $risk->weather_score ?? 0 }},
+
+{{ $risk->inflation_score ?? 0 }},
+
+{{ $risk->currency_score ?? 0 }},
+
+{{ $risk->news_score ?? 0 }}
 
 
-data:
-
-{!! json_encode(
-array_values($riskChart)
-) !!},
-
-
-borderWidth:3,
-
-
-tension:0.4
+]
 
 
 }]
 
 
-},
-
-
-
-options:{
-
-
-responsive:true,
-
-
-plugins:{
-
-
-legend:{
-
-display:true
-
-}
-
-
-},
-
-
-scales:{
-
-
-y:{
-
-
-beginAtZero:true,
-
-
-max:100
-
-
 }
 
 
 }
 
-
-}
-
-
-});
-
-
-}
-
-
-
-
-
-
-
-// ==========================
-// LEAFLET GLOBAL MAP
-// ==========================
-
-
-var map =
-L.map(
-'map'
-)
-.setView(
-[15,50],
-2
 );
 
 
 
 
+
+
+
+// ======================
+// GLOBAL RISK MAP
+// ======================
+
+
+var map =
+L.map('map')
+.setView(
+[
+-2,
+118
+],
+4
+);
+
+
+
 L.tileLayer(
 
-'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-
-{
-
-maxZoom:19
-
-}
+'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
 
 )
 .addTo(map);
@@ -1067,51 +568,84 @@ maxZoom:19
 
 
 
-
-// ==========================
-// PORT MARKER DATABASE
-// ==========================
-
-
-let ports = {!! json_encode($ports ?? [])!!};
+// ======================
+// ACTIVE COUNTRY MARKER
+// ======================
 
 
+let country = {
 
 
-ports.forEach(function(port){
+name:
+
+"{{ $country->name ?? 'Unknown' }}",
+
+
+lat:
+
+{{ $country->latitude ?? -6.2 }},
+
+
+lng:
+
+{{ $country->longitude ?? 106.8 }},
+
+
+risk:
+
+"{{ $risk->risk_level ?? 'LOW' }}",
+
+
+score:
+
+{{ $risk->total_score ?? 0 }}
+
+
+};
 
 
 
-let latitude =
-parseFloat(
-port.latitude
-);
 
 
-
-let longitude =
-parseFloat(
-port.longitude
-);
-
-
+let markerColor;
 
 
 if(
-!isNaN(latitude)
-&&
-!isNaN(longitude)
+country.risk == "HIGH"
 ){
 
+markerColor =
+"🔴";
+
+}
+else if(
+country.risk == "MEDIUM"
+){
+
+markerColor =
+"🟡";
+
+}
+else{
+
+markerColor =
+"🟢";
+
+}
 
 
-L.marker([
 
-latitude,
 
-longitude
 
-])
+
+L.marker(
+
+[
+country.lat,
+country.lng
+]
+
+)
 
 .addTo(map)
 
@@ -1120,117 +654,21 @@ longitude
 
 `
 
-<h6>
+<h3>
 
-⚓ ${port.name}
+${markerColor}
+${country.name}
 
-</h6>
+</h3>
 
 
 <hr>
 
 
-<b>City:</b>
+Risk Level :
+<b>
 
-${port.city}
-
-
-<br>
-
-
-<b>Status:</b>
-
-${port.status}
-
-
-<br>
-
-
-<b>Risk Level:</b>
-
-${port.risk_level}
-
-
-`
-
-);
-
-
-
-}
-
-
-
-});
-
-
-
-
-
-
-
-
-
-// ==========================
-// COUNTRY MARKER DATABASE
-// ==========================
-
-
-@isset($country)
-
-
-
-let countryLat =
-parseFloat(
-"{{ $country->latitude }}"
-);
-
-
-let countryLng =
-parseFloat(
-"{{ $country->longitude }}"
-);
-
-
-
-
-if(
-!isNaN(countryLat)
-&&
-!isNaN(countryLng)
-){
-
-
-
-L.circleMarker(
-
-[
-
-countryLat,
-
-countryLng
-
-],
-
-{
-
-radius:10
-
-}
-
-)
-
-
-.addTo(map)
-
-
-.bindPopup(
-
-`
-
-🌍 <b>
-
-{{ $country->name }}
+${country.risk}
 
 </b>
 
@@ -1238,9 +676,9 @@ radius:10
 <br>
 
 
-Country Risk:
+Risk Score :
 
-{{ $risk->risk_level ?? 'LOW' }}
+${country.score}%
 
 
 `
@@ -1248,25 +686,17 @@ Country Risk:
 );
 
 
-}
+L.tileLayer(
+
+'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+
+)
+.addTo(map);
 
 
-
-@endisset
-
-
-
-
-
-
-});
 
 
 </script>
 
 
-
-</body>
-
-
-</html>
+@endsection

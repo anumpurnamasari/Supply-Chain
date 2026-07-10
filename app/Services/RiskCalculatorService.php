@@ -1,76 +1,135 @@
 <?php
 
+
 namespace App\Services;
+
+
+use App\Models\RiskScore;
 
 
 class RiskCalculatorService
 {
 
 
-    public function calculate(
-        $weatherRisk,
-        $currencyRisk,
-        $inflationRisk = 0,
-        $newsRisk = 0
-    )
-    {
+public function calculate($countryId)
+{
 
 
-        $total =
+    /*
+    ===============================
+    WEIGHTED RISK MODEL
 
-        ($weatherRisk * 0.3)
-        +
-        ($inflationRisk * 0.2)
-        +
-        ($newsRisk * 0.4)
-        +
-        ($currencyRisk * 0.1);
-
-
-
-        if($total <= 30){
+    Weather   = 30%
+    Inflation = 20%
+    News      = 40%
+    Currency  = 10%
+    ===============================
+    */
 
 
-            $level =
-            "LOW";
+    $weatherScore =
+    rand(10,40);
 
 
-        }
-        elseif($total <= 60){
+    $inflationScore =
+    rand(10,30);
 
 
-            $level =
-            "MEDIUM";
+    $currencyScore =
+    rand(5,25);
 
 
-        }
-        else{
-
-
-            $level =
-            "HIGH";
-
-
-        }
+    $newsScore =
+    rand(10,50);
 
 
 
 
-        return [
+    $total =
+
+    ($weatherScore * 0.3)
+    +
+    ($inflationScore * 0.2)
+    +
+    ($currencyScore * 0.1)
+    +
+    ($newsScore * 0.4);
 
 
-            "score" =>
+
+
+
+
+    if($total < 30){
+
+        $level = "LOW";
+
+    }
+    elseif($total < 60){
+
+        $level = "MEDIUM";
+
+    }
+    else{
+
+        $level = "HIGH";
+
+    }
+
+
+
+
+
+
+    return RiskScore::updateOrCreate(
+
+        [
+
+            'country_id'
+            =>
+            $countryId
+
+        ],
+
+
+        [
+
+            'weather_score'
+            =>
+            $weatherScore,
+
+
+            'inflation_score'
+            =>
+            $inflationScore,
+
+
+            'currency_score'
+            =>
+            $currencyScore,
+
+
+            'news_score'
+            =>
+            $newsScore,
+
+
+            'total_score'
+            =>
             round($total),
 
 
-            "level" =>
+            'risk_level'
+            =>
             $level
 
+        ]
 
-        ];
+    );
 
 
-    }
+}
+
 
 
 }
