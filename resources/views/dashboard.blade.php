@@ -246,134 +246,68 @@ News Analyzed
 
 <div class="col-md-6">
 
-<div class="card-box analytics-card">
+<div class="card-box analytics-card country-card">
 
 
 <h5>
 🌎 ACTIVE COUNTRY
 </h5>
 
-
-
 <div class="country-monitor">
 
+    <div class="country-header">
 
-<div class="country-main">
+        <img
+            src="{{ $country->flag ?? '' }}"
+            class="country-flag"
+            style="width:120px;height:80px;"
+        >
 
+        <div>
 
-<img
-src="{{ $country->flag ?? '' }}"
-class="country-flag"
->
+            <h2>{{ $country->name }}</h2>
 
+            <small>Global Supply Monitoring</small>
 
+        </div>
 
-<div>
+    </div>
 
+    <div class="country-divider"></div>
 
-<h2>
+    <div class="country-grid">
 
-{{ $country->name ?? 'No Country' }}
+        <div class="info-card">
+            <span>REGION</span>
+            <h4>{{ $country->region }}</h4>
+        </div>
 
-</h2>
+        <div class="info-card">
+            <span>CURRENCY</span>
+            <h4>{{ $country->currency }}</h4>
+        </div>
 
+        <div class="info-card">
+            <span>POPULATION</span>
+            <h4>{{ number_format(($country->population ?? 0)/1000000,1) }} M</h4>
+        </div>
 
-<span>
+        <div class="info-card">
+            <span>RISK LEVEL</span>
+            <h4>{{ $risk->risk_level }}</h4>
+        </div>
 
-Global Supply Monitoring
+    </div>
 
-</span>
+    <div class="risk-score-box">
 
+        <span>Risk Score</span>
 
-</div>
+        <h2>{{ $risk->total_score ?? 0 }}%</h2>
 
-
-</div>
-
-
-
-
-
-
-<div class="country-info">
-
-
-<div>
-
-<p>Region</p>
-
-<h4>
-
-{{ $country->region ?? '-' }}
-
-</h4>
-
-</div>
-
-
-
-
-
-<div>
-
-<p>Currency</p>
-
-<h4>
-
-{{ $country->currency ?? '-' }}
-
-</h4>
+    </div>
 
 </div>
-
-
-
-
-
-<div>
-
-<p>Population</p>
-
-<h4>
-
-{{ number_format($country->population ?? 0) }}
-
-</h4>
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="risk-badge">
-
-
-<span>
-
-{{ $risk->risk_level ?? 'LOW' }}
-
-</span>
-
-
-<h3>
-
-{{ $risk->total_score ?? 0 }}%
-
-</h3>
-
-
-</div>
-
-
-
-</div>
-
 
 
 </div>

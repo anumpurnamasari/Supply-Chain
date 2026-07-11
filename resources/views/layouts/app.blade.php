@@ -419,6 +419,15 @@ overflow:hidden;
 
 }
 
+.country-card{
+
+
+height:430px;
+
+overflow:hidden;
+
+
+}
 
 .analytics-card canvas{
 
@@ -500,9 +509,12 @@ color:#9BE8F0;
 
 .alert-box{
 
-height:360px;
+
+height:430px;
+
 
 overflow:hidden;
+
 
 }
 
@@ -513,13 +525,13 @@ overflow:hidden;
 margin-top:20px;
 
 
-flex:1;
+height:330px;
 
 
 overflow-y:auto;
 
 
-padding-right:5px;
+padding-right:8px;
 
 
 }
@@ -535,22 +547,16 @@ display:none;
 }
 
 
-
-
-
 .alert-item{
 
 
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
+padding:15px 18px;
 
 
-padding:18px 22px;
+margin-bottom:12px;
 
-margin-bottom:15px;
+
+border-radius:14px;
 
 
 background:
@@ -564,16 +570,11 @@ linear-gradient(
 
 border:
 
-1px solid rgba(0,217,213,.25);
-
-
-border-radius:14px;
+1px solid rgba(0,217,213,.3);
 
 
 transition:.3s;
 
-
-cursor:pointer;
 
 }
 
@@ -610,18 +611,17 @@ box-shadow:
 
 .alert-item h6{
 
-font-family:'Rajdhani',sans-serif;
 
-font-size:18px;
+font-size:16px;
 
-font-weight:700;
 
-color:#65FFF5;
+line-height:1.3;
 
-margin:0;
+
+margin-bottom:8px;
+
 
 }
-
 
 
 
@@ -840,65 +840,133 @@ align-items:center;
 
 gap:20px;
 
-}
+margin-top:20px;
 
-
-
-.country-flag{
-
-width:90px;
-
-height:55px;
-
-object-fit:cover;
-
-border-radius:8px;
-
-
-box-shadow:
-
-0 0 20px rgba(0,245,212,.3);
 
 }
 
 
 
+.country-header{
 
-.country-main h2{
+display:flex;
 
-font-family:'Orbitron',sans-serif;
-
-color:#00F5D4;
-
-font-size:28px;
-
-}
-
-
-
-.country-main span{
-
-color:#A9DCEC;
-
-}
-
-
-
-
-
-.country-info{
-
-display:grid;
-
-grid-template-columns:
-
-repeat(3,1fr);
-
+align-items:center;
 
 gap:15px;
 
+margin:20px 0;
 
-margin-top:30px;
+}
+
+.country-flag{
+
+    width:30px !important;
+    height:20px !important;
+
+    min-width:30px;
+    max-width:30px;
+
+    min-height:20px;
+    max-height:20px;
+
+    object-fit:cover;
+
+    border-radius:2px;
+
+    border:1px solid rgba(255,255,255,.2);
+
+    display:block;
+
+    flex-shrink:0;
+
+}
+
+.country-header h2{
+
+    margin:0;
+
+    font-family:'Orbitron', sans-serif;
+
+    font-size:20px;
+
+    font-weight:600;
+
+    color:#00F5D4;
+
+    letter-spacing:1px;
+
+    text-shadow:0 0 6px rgba(0,245,212,.25);
+
+    font-size:18px;
+
+}
+
+.country-header small{
+
+color:#9CCAD5;
+
+font-size:13px;
+
+}
+
+.country-table{
+
+width:100%;
+
+margin-top:15px;
+
+}
+
+.country-table td{
+
+padding:10px 0;
+
+font-size:15px;
+
+}
+
+.country-table td:first-child{
+
+width:45%;
+
+color:#78D8FF;
+
+font-weight:600;
+
+}
+
+.country-table td:last-child{
+
+text-align:right;
+
+color:#FFFFFF;
+
+font-weight:500;
+
+}
+
+.country-divider{
+
+height:1px;
+
+background:rgba(255,255,255,.08);
+
+margin:15px 0;
+
+}
+
+.country-info{
+
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:10px;
+
+margin-top:20px;
+
 
 }
 
@@ -908,19 +976,8 @@ margin-top:30px;
 
 .country-info div{
 
-background:
 
-rgba(255,255,255,.05);
-
-
-padding:15px;
-
-border-radius:12px;
-
-
-border:
-
-1px solid rgba(0,217,213,.2);
+padding:10px;
 
 }
 
@@ -929,26 +986,21 @@ border:
 
 .country-info p{
 
-color:#8FE9FF;
 
-margin:0;
+font-size:11px;
 
-font-size:13px;
 
 }
-
 
 
 
 .country-info h4{
 
-margin-top:8px;
 
-color:white;
+font-size:16px;
+
 
 }
-
-
 
 
 
@@ -1034,6 +1086,109 @@ justify-content:space-between;
 }
 
 
+.country-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:12px;
+
+margin-top:20px;
+
+}
+
+.info-card{
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(0,245,212,.15);
+
+border-radius:12px;
+
+padding:12px;
+
+transition:.3s;
+
+}
+
+.info-card:hover{
+
+border-color:#00F5D4;
+
+box-shadow:0 0 15px rgba(0,245,212,.2);
+
+}
+
+.info-card span{
+
+display:block;
+
+font-size:11px;
+
+font-family:'Rajdhani',sans-serif;
+
+letter-spacing:1px;
+
+color:#7FD8FF;
+
+margin-bottom:5px;
+
+}
+
+.info-card h4{
+
+margin:0;
+
+font-size:18px;
+
+font-family:'Poppins',sans-serif;
+
+font-weight:600;
+
+color:white;
+
+}
+
+.risk-score-box{
+
+margin-top:15px;
+
+padding:14px;
+
+border-radius:12px;
+
+background:linear-gradient(90deg,#00D9D5,#118AB2);
+
+text-align:center;
+
+}
+
+.risk-score-box span{
+
+font-size:12px;
+
+letter-spacing:1px;
+
+text-transform:uppercase;
+
+color:#062033;
+
+font-weight:600;
+
+}
+
+.risk-score-box h2{
+
+margin:5px 0 0;
+
+font-family:'Orbitron',sans-serif;
+
+font-size:30px;
+
+color:white;
+
+}
 
 </script>
 
