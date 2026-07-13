@@ -260,7 +260,7 @@ News Analyzed
         <img
             src="{{ $country->flag ?? '' }}"
             class="country-flag"
-            style="width:120px;height:80px;"
+            style="width:110px;height:70px;"
         >
 
         <div>
@@ -635,4 +635,3 @@ L.tileLayer(
 
 @endsection
 
-tryyy

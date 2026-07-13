@@ -365,10 +365,10 @@ margin-bottom:18px;
 font-family:'Orbitron',sans-serif;
 
 
-font-size:42px;
+font-size:20px;
 
 
-font-weight:800;
+font-weight:400;
 
 
 letter-spacing:1px;
@@ -832,19 +832,6 @@ justify-content:space-between;
 
 }
 
-.country-main{
-
-display:flex;
-
-align-items:center;
-
-gap:20px;
-
-margin-top:20px;
-
-
-}
-
 
 
 .country-header{
@@ -853,9 +840,9 @@ display:flex;
 
 align-items:center;
 
-gap:15px;
+gap:10px;
 
-margin:20px 0;
+margin:15px 0;
 
 }
 
@@ -888,9 +875,9 @@ margin:20px 0;
 
     font-family:'Orbitron', sans-serif;
 
-    font-size:20px;
+    font-size:10px;
 
-    font-weight:600;
+    font-weight:100;
 
     color:#00F5D4;
 
@@ -898,7 +885,6 @@ margin:20px 0;
 
     text-shadow:0 0 6px rgba(0,245,212,.25);
 
-    font-size:18px;
 
 }
 
@@ -906,169 +892,12 @@ margin:20px 0;
 
 color:#9CCAD5;
 
-font-size:13px;
-
-}
-
-.country-table{
-
-width:100%;
-
-margin-top:15px;
-
-}
-
-.country-table td{
-
-padding:10px 0;
-
-font-size:15px;
-
-}
-
-.country-table td:first-child{
-
-width:45%;
-
-color:#78D8FF;
-
-font-weight:600;
-
-}
-
-.country-table td:last-child{
-
-text-align:right;
-
-color:#FFFFFF;
-
-font-weight:500;
-
-}
-
-.country-divider{
-
-height:1px;
-
-background:rgba(255,255,255,.08);
-
-margin:15px 0;
-
-}
-
-.country-info{
-
-
-display:grid;
-
-grid-template-columns:repeat(3,1fr);
-
-gap:10px;
-
-margin-top:20px;
-
+font-size:10px;
 
 }
 
 
 
-
-
-.country-info div{
-
-
-padding:10px;
-
-}
-
-
-
-
-.country-info p{
-
-
-font-size:11px;
-
-
-}
-
-
-
-.country-info h4{
-
-
-font-size:16px;
-
-
-}
-
-
-
-.risk-badge{
-
-
-margin-top:25px;
-
-
-background:
-
-linear-gradient(
-90deg,
-#00D9D5,
-#118AB2
-);
-
-
-padding:15px;
-
-
-border-radius:15px;
-
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-}
-
-
-
-.risk-badge span{
-
-font-family:'Orbitron';
-
-font-size:18px;
-
-color:#061826;
-
-}
-
-
-
-.risk-badge h3{
-
-margin:0;
-
-font-family:'Orbitron';
-
-color:white;
-
-}
-
-.bottom-card{
-
-
-height:430px;
-
-
-display:flex;
-
-flex-direction:column;
-
-
-}
 
 .country-monitor{
 
@@ -1140,11 +969,11 @@ margin-bottom:5px;
 
 margin:0;
 
-font-size:18px;
+font-size:5px;
 
 font-family:'Poppins',sans-serif;
 
-font-weight:600;
+font-weight:300;
 
 color:white;
 
