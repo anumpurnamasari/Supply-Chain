@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\NewsCache;
 
@@ -15,26 +15,23 @@ class NewsController extends Controller
 
 
 public function sync(
-
-NewsService $newsService,
-
-SentimentService $sentimentService
-
+    Request $request,
+    NewsService $newsService,
+    SentimentService $sentimentService
 )
-
 {
 
 
-$country =
-Country::first();
+$country = Country::find($request->country_id);
+
+if (!$country) {
+
+    $country = Country::where('code', 'ID')->first();
+
+}
 
 
-
-$result =
-$newsService
-->getNews(
-"business"
-);
+$result = $newsService->getNews($country->name);
 
 
 if(
@@ -50,7 +47,10 @@ return "Tidak ada berita ditemukan";
 }
 
 
-NewsCache::truncate();
+NewsCache::where(
+    'country_id',
+    $country->id
+)->delete();
 
 
 foreach(
@@ -76,43 +76,24 @@ $text
 );
 
 
-
-
-
 NewsCache::create([
 
+    'country_id' => $country->id,
 
-'country_id'
-=>
-$country->id,
+    'title' => $article['title'],
 
+    'description' => $article['description'],
 
-'title'
-=>
-$article['title'],
+    'source' => $article['source']['name'] ?? null,
 
+    'url' => $article['url'] ?? null,
 
-'description'
-=>
-$article['description'],
+    'sentiment' => $sentiment['type'],
 
-
-'source'
-=>
-$article['source']['name'],
-
-
-'sentiment'
-=>
-$sentiment['type'],
-
-
-'sentiment_score'
-=>
-$sentiment['score']
-
+    'sentiment_score' => $sentiment['score']
 
 ]);
+
 
 
 }

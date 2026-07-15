@@ -2,16 +2,11 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
-
 
 class EconomicData extends Model
 {
-
-
-    protected $fillable=[
-
+    protected $fillable = [
 
         'country_id',
 
@@ -19,10 +14,18 @@ class EconomicData extends Model
 
         'inflation',
 
-        'economic_risk'
+        'population',
 
+        'exports',
+
+        'imports',
+
+        'economic_risk'
 
     ];
 
-
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

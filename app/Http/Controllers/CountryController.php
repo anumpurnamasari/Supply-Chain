@@ -2,96 +2,74 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Country;
 use App\Services\CountryService;
 
-
 class CountryController extends Controller
 {
-
-
-    public function sync(
-        CountryService $service
-    )
+    public function sync(CountryService $service)
     {
+        $totalSaved = 0;
 
+        // Free plan 100 data per halaman
+        foreach ([0, 100, 200] as $offset) {
 
-        $result =
-        $service->getCountry(
-            "Indonesia"
-        );
+            $result = $service->syncCountries($offset);
 
+            if (!$result['success']) {
 
+                return response()->json($result);
 
-        if(
-            $result['error'] == true
-        ){
+            }
 
-            return $result;
+            $countries = $result['data']['data']['objects'] ?? [];
 
+            foreach ($countries as $item) {
+
+                if (empty($item['names']['common'])) {
+                    continue;
+                }
+
+                Country::updateOrCreate(
+
+                    [
+
+                        'code' => $item['codes']['alpha_2'] ?? null
+
+                    ],
+
+                    [
+
+                        'name' => $item['names']['common'],
+
+                        'region' => $item['region'] ?? null,
+
+                        'population' => $item['population'] ?? 0,
+
+                        'currency' => $item['currencies'][0]['code'] ?? null,
+
+                        'latitude' => $item['coordinates']['lat'] ?? 0,
+
+                        'longitude' => $item['coordinates']['lng'] ?? 0,
+
+                        'flag' => $item['flag']['url_png'] ?? null,
+
+                    ]
+
+                );
+
+                $totalSaved++;
+            }
         }
 
+        return response()->json([
 
+            'success' => true,
 
-        $data =
-        $result['data'];
+            'saved' => $totalSaved,
 
+            'database_total' => Country::count()
 
-
-        Country::updateOrCreate(
-
-            [
-                'name' =>
-                $data['country']
-            ],
-
-
-            [
-
-                'code' =>
-                "ID",
-
-
-                'region' =>
-                "Asia",
-
-
-                'population' =>
-                end(
-                    $data['populationCounts']
-                )
-                ['value'],
-
-
-                'currency' =>
-                "IDR",
-
-
-                'latitude' =>
-                -6.200000,
-
-
-                'longitude' =>
-                106.816666,
-
-
-                'flag'=>
-                "https://flagcdn.com/w320/id.png"
-
-
-            ]
-
-        );
-
-
-
-
-        return
-        "Country API berhasil disimpan";
-
-
+        ]);
     }
-
-
 }

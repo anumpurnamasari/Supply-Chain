@@ -10,44 +10,52 @@ class NewsService
 {
 
 
-    public function getNews($keyword)
+    public function getNews($countryName)
     {
+    $queries = [
 
+        "$countryName economy",
 
-        $response =
-        Http::get(
+        "$countryName trade",
+
+        "$countryName shipping",
+
+        "$countryName logistics"
+
+    ];
+
+    foreach ($queries as $query) {
+
+        $response = Http::get(
             "https://gnews.io/api/v4/search",
             [
 
-                "q" =>
-                $keyword,
+                "q" => $query,
 
+                "lang" => "en",
 
-                "lang" =>
-                "en",
+                "max" => 10,
 
-
-                "country" =>
-                "us",
-
-
-                "max" =>
-                10,
-
-
-                "apikey" =>
-                env("GNEWS_API_KEY")
-
+                "apikey" => env("GNEWS_API_KEY")
 
             ]
         );
 
+        $json = $response->json();
 
+        if (!empty($json['articles'])) {
 
-        return
-        $response->json();
+            return $json;
 
+        }
 
+    }
+
+    return [
+
+        "articles" => []
+
+    ];
     }
 
 

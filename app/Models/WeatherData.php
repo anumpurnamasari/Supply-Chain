@@ -7,11 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class WeatherData extends Model
 {
     protected $fillable = [
+
         'country_id',
+
         'temperature',
+
         'rainfall',
+
         'wind_speed',
-        'weather_code'
+
+        'storm_risk',
+
+        'weather_code',
+
+        'last_synced'
+
     ];
 
     public function country()

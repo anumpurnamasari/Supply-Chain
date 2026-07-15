@@ -28,16 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get(
-
-'/country/sync',
-
-[
-CountryController::class,
-'sync'
-]
-
-);
 
 Route::get(
 '/dashboard',
@@ -47,6 +37,9 @@ DashboardController::class,
 ]
 )
 ->name('dashboard');
+
+Route::get('/countries/sync', [CountryController::class, 'sync'])
+    ->name('countries.sync');
 
 Route::get('/weather',
 [
@@ -62,7 +55,8 @@ Route::get('/currency',
 ])
 ->name('currency');
 
-
+Route::get('/economic/sync', [EconomicController::class, 'sync'])
+    ->name('economic.sync');
 
 Route::get('/ports',
 [

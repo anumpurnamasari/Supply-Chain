@@ -16,6 +16,7 @@ protected $fillable=[
 'title',
 'description',
 'source',
+'url',
 'sentiment',
 'sentiment_score'
 

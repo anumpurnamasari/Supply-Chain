@@ -1,102 +1,68 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
-
+use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\EconomicData;
 use App\Services\WorldBankService;
 
-
-
 class EconomicController extends Controller
 {
+    public function sync(Request $request, WorldBankService $service)
+    {
+        $country = Country::find($request->country_id);
 
+        if (!$country) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Country not found'
+            ], 404);
+        }
 
-public function sync(
-WorldBankService $service
-)
-{
+        $data = $service->getEconomic($country->code);
 
+        $risk = 20;
 
-$country =
-Country::first();
+        if (($data['inflation'] ?? 0) > 10) {
+            $risk += 40;
+        }
 
+        if (($data['gdp'] ?? 0) < 100000000000) {
+            $risk += 20;
+        }
 
+        if (($data['exports'] ?? 0) < ($data['imports'] ?? 0)) {
+            $risk += 20;
+        }
 
-$data =
-$service->getEconomic(
+        $risk = min($risk, 100);
 
-$country->code
+        $economic = EconomicData::updateOrCreate(
 
-);
+            [
+                'country_id' => $country->id
+            ],
 
+            [
+                'gdp' => $data['gdp'],
+                'inflation' => $data['inflation'],
+                'population' => $data['population'],
+                'exports' => $data['exports'],
+                'imports' => $data['imports'],
+                'economic_risk' => $risk
+            ]
 
+        );
 
+        return response()->json([
 
-$risk = 0;
+            'success' => true,
 
+            'country' => $country->name,
 
+            'data' => $economic
 
-if(
-$data['inflation']
-> 10
-){
-
-$risk = 80;
-
-}
-
-elseif(
-$data['inflation']
-> 5
-){
-
-$risk = 50;
-
-}
-
-else{
-
-
-$risk = 20;
-
-
-}
-
-
-
-
-EconomicData::create([
-
-
-'country_id'
-=>$country->id,
-
-
-'gdp'
-=>$data['gdp'],
-
-
-'inflation'
-=>$data['inflation'],
-
-
-'economic_risk'
-=>$risk
-
-
-]);
-
-
-
-
-return
-"Economic data updated";
-
-
-}
-
-
+        ]);
+    }
 }

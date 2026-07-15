@@ -4,7 +4,7 @@ namespace App\Services;
 
 
 use App\Models\Country;
-use App\Models\WeatherCache;
+use App\Models\WeatherData;
 use Illuminate\Support\Facades\Http;
 
 
@@ -70,7 +70,7 @@ class WeatherService
 
 
 
-        WeatherCache::updateOrCreate(
+        WeatherData::updateOrCreate(
 
             [
                 'country_id'
@@ -100,6 +100,7 @@ class WeatherService
                     =>
                 $stormRisk,
 
+                'weather_code' => $current['weather_code'] ?? null,
 
                 'last_synced'
                     =>

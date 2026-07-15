@@ -18,7 +18,52 @@ Global Supply Chain Risk Intelligence Overview
 
 </div>
 
+<div class="card-box mb-4">
 
+    <div class="row align-items-center">
+
+        <div class="col-md-6">
+
+            <h5 class="mb-2">
+                🌍 Select Country
+            </h5>
+
+            <small>
+                Select a country to monitor supply chain risk.
+            </small>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <form method="GET" action="{{ route('dashboard') }}">
+
+                <select
+                    name="country_id"
+                    class="form-select"
+                    onchange="this.form.submit()">
+
+                    @foreach($countries as $item)
+
+                        <option
+                            value="{{ $item->id }}"
+                            {{ $country && $country->id == $item->id ? 'selected' : '' }}>
+
+                            {{ $item->name }}
+
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 
@@ -352,9 +397,13 @@ News Analyzed
 
 
 <h6>
+    <a href="{{ $item->url }}"
+       target="_blank"
+       style="color:white;text-decoration:none;">
 
-{{ $item->title }}
+        {{ $item->title }}
 
+    </a>
 </h6>
 
 
