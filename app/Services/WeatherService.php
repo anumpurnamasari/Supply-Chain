@@ -35,7 +35,7 @@ class WeatherService
 
                 'current'
                     =>
-                'temperature_2m,rain,wind_speed_10m'
+                'temperature_2m,rain,wind_speed_10m,weather_code'
 
 
             ]
@@ -115,33 +115,66 @@ class WeatherService
 
     }
 
+    private function calculateStormRisk($rain, $wind)
+{
+    $risk = 0;
 
-
-    private function calculateStormRisk(
-        $rain,
-        $wind
-    )
-    {
-
-        $score = 0;
-
-
-        if ($rain > 20) {
-
-            $score += 50;
-
-        }
-
-
-        if ($wind > 50) {
-
-            $score += 50;
-
-        }
-
-
-        return $score;
-
+    if ($rain >= 5) {
+        $risk += 20;
     }
+
+    if ($rain >= 20) {
+        $risk += 30;
+    }
+
+    if ($wind >= 30) {
+        $risk += 20;
+    }
+
+    if ($wind >= 60) {
+        $risk += 30;
+    }
+
+    return min($risk,100);
+}
+
+    private function getWeatherDescription($code)
+{
+    return match($code){
+
+        0 => 'Clear Sky',
+
+        1 => 'Mainly Clear',
+
+        2 => 'Partly Cloudy',
+
+        3 => 'Overcast',
+
+        45 => 'Fog',
+
+        48 => 'Fog',
+
+        51 => 'Light Drizzle',
+
+        53 => 'Drizzle',
+
+        55 => 'Heavy Drizzle',
+
+        61 => 'Light Rain',
+
+        63 => 'Rain',
+
+        65 => 'Heavy Rain',
+
+        71 => 'Snow',
+
+        80 => 'Rain Shower',
+
+        95 => 'Thunderstorm',
+
+        default => 'Unknown'
+
+    };
+}
 
 }

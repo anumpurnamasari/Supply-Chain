@@ -2,61 +2,34 @@
 
 namespace App\Services;
 
-
 use Illuminate\Support\Facades\Http;
-
 
 class NewsService
 {
-
-
-    public function getNews($countryName)
+    public function getNews($country)
     {
-    $queries = [
-
-        "$countryName economy",
-
-        "$countryName trade",
-
-        "$countryName shipping",
-
-        "$countryName logistics"
-
-    ];
-
-    foreach ($queries as $query) {
+        $keyword = '"' . $country . '" logistics trade shipping economy';
 
         $response = Http::get(
-            "https://gnews.io/api/v4/search",
+
+            'https://gnews.io/api/v4/search',
+
             [
 
-                "q" => $query,
+                'q' => $keyword,
 
-                "lang" => "en",
+                'lang' => 'en',
 
-                "max" => 10,
+                'max' => 10,
 
-                "apikey" => env("GNEWS_API_KEY")
+                'sortby' => 'publishedAt',
+
+                'apikey' => env('GNEWS_API_KEY')
 
             ]
+
         );
 
-        $json = $response->json();
-
-        if (!empty($json['articles'])) {
-
-            return $json;
-
-        }
-
+        return $response->json();
     }
-
-    return [
-
-        "articles" => []
-
-    ];
-    }
-
-
 }

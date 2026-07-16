@@ -130,6 +130,10 @@ if ($cachedNews == 0) {
 
                 'url' => $article['url'] ?? null,
 
+                'image' => $article['image'] ?? null,
+
+                'published_at' => $article['publishedAt'] ?? null,
+
                 'sentiment' => $sentiment['type'],
 
                 'sentiment_score' => $sentiment['score']
@@ -155,6 +159,40 @@ if ($cachedNews == 0) {
         );
 
     }
+
+    $cachedNews = NewsCache::where('country_id', $country->id)
+    ->where('updated_at', '>=', now()->subHours(6))
+    ->exists();
+
+
+    if (!$cachedNews) {
+
+    $result = $this->newsService->getNews($country->name);
+
+    if (isset($result['articles'])) {
+
+        NewsCache::where('country_id', $country->id)->delete();
+
+        foreach ($result['articles'] as $article) {
+
+            $text = ($article['title'] ?? '') . ' ' . ($article['description'] ?? '');
+
+            $sentiment = $this->sentimentService->analyze($text);
+
+            NewsCache::create([
+                'country_id'      => $country->id,
+                'title'           => $article['title'] ?? '-',
+                'description'     => $article['description'] ?? null,
+                'source'          => $article['source']['name'] ?? null,
+                'url'             => $article['url'] ?? null,
+                'image'           => $article['image'] ?? null,
+                'published_at'    => $article['publishedAt'] ?? null,
+                'sentiment'       => $sentiment['type'],
+                'sentiment_score' => $sentiment['score']
+            ]);
+        }
+    }
+}
 
     // ======================
     // DATA BERDASARKAN NEGARA

@@ -1,35 +1,40 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers;
 
-return new class extends Migration
+use Illuminate\Http\Request;
+use App\Models\Country;
+use App\Models\CurrencyRate;
+use App\Services\CurrencyService;
+
+class CurrencyController extends Controller
 {
-    public function up(): void
+    public function index(
+        Request $request,
+        CurrencyService $service
+    )
     {
-        Schema::table('weather_data', function (Blueprint $table) {
+        $country = Country::find($request->country_id);
 
-            $table->integer('storm_risk')
-                ->default(0)
-                ->after('wind_speed');
+        if (!$country) {
+            $country = Country::where('code', 'ID')->first();
+        }
 
-            $table->timestamp('last_synced')
-                ->nullable()
-                ->after('weather_code');
+        if ($country) {
+            $service->syncCurrency($country);
+        }
 
-        });
+        $currency = CurrencyRate::where(
+            'country_id',
+            $country->id
+        )->latest()->first();
+
+        return view(
+            'pages.currency',
+            compact(
+                'country',
+                'currency'
+            )
+        );
     }
-
-    public function down(): void
-    {
-        Schema::table('weather_data', function (Blueprint $table) {
-
-            $table->dropColumn([
-                'storm_risk',
-                'last_synced'
-            ]);
-
-        });
-    }
-};
+}

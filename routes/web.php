@@ -38,6 +38,12 @@ DashboardController::class,
 )
 ->name('dashboard');
 
+use App\Http\Controllers\ApiTestController;
+
+Route::get('/api-test', [ApiTestController::class,'index'])
+    ->name('api.test');
+
+
 Route::get('/countries/sync', [CountryController::class, 'sync'])
     ->name('countries.sync');
 
@@ -48,12 +54,10 @@ Route::get('/weather',
 ])
 ->name('weather');
 
-Route::get('/currency',
-[
-    CurrencyController::class,
-    'index'
-])
-->name('currency');
+Route::get(
+    '/currency',
+    [CurrencyController::class, 'index']
+)->name('currency');
 
 Route::get('/economic/sync', [EconomicController::class, 'sync'])
     ->name('economic.sync');
@@ -100,3 +104,22 @@ Route::get('/admin',
     'index'
 ])
 ->name('admin');
+
+Route::get(
+    '/ports/import',
+    [PortController::class,'import']
+)->name('ports.import');
+
+Route::get('/api-test', [ApiTestController::class,'index']);
+
+Route::get('/api-test/countries',[ApiTestController::class,'countries']);
+
+Route::get('/api-test/weather',[ApiTestController::class,'weather']);
+
+Route::get('/api-test/economic',[ApiTestController::class,'economic']);
+
+Route::get('/api-test/currency',[ApiTestController::class,'currency']);
+
+Route::get('/api-test/news',[ApiTestController::class,'news']);
+
+Route::get('/api-test/ports',[ApiTestController::class,'ports']);
