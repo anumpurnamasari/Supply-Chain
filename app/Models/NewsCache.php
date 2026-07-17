@@ -19,6 +19,7 @@ protected $fillable=[
 'url',
 'image',
 'published_at',
+'category',
 'sentiment',
 'sentiment_score'
 

@@ -19,12 +19,13 @@ rel="stylesheet">
 href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 rel="stylesheet">
 
-
 <link
 rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
 
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -237,7 +238,27 @@ translateX(5px);
 
 }
 
+.menu a i{
 
+font-size:18px;
+
+width:22px;
+
+text-align:center;
+
+color:#D8F6FF;
+
+transition:.3s;
+
+}
+
+.menu a:hover i{
+
+color:#001219;
+
+transform:scale(1.1);
+
+}
 
 
 /* CONTENT */
@@ -699,50 +720,57 @@ transform:translateX(5px);
 
 </div>
 
-
-
 <div class="menu">
 
-
 <a href="{{ route('dashboard') }}">
-Dashboard
+    <i class="bi bi-grid-1x2-fill"></i>
+    Dashboard
 </a>
 
+<a href="{{ route('risk') }}">
+    <i class="bi bi-speedometer2"></i>
+    Risk Scoring
+</a>
 
 <a href="{{ route('weather') }}">
-Weather Risk
+    <i class="bi bi-cloud-rain"></i>
+    Weather Risk
 </a>
-
 
 <a href="{{ route('currency') }}">
-Currency Impact
+    <i class="bi bi-currency-exchange"></i>
+    Currency Impact
 </a>
-
-
-<a href="{{ route('ports') }}">
-Port Monitoring
-</a>
-
 
 <a href="{{ route('news') }}">
-News Intelligence
+    <i class="bi bi-newspaper"></i>
+    News Intelligence
 </a>
 
+<a href="{{ route('ports') }}">
+    <i class="bi bi-geo-alt"></i>
+    Port Monitoring
+</a>
+
+<a href="{{ route('visualization') }}">
+    <i class="bi bi-bar-chart-line"></i>
+    Data Visualization
+</a>
 
 <a href="{{ route('compare') }}">
-Country Compare
+    <i class="bi bi-globe-americas"></i>
+    Country Compare
 </a>
-
 
 <a href="{{ route('watchlist') }}">
-Watchlist
+    <i class="bi bi-star"></i>
+    Watchlist
 </a>
-
 
 <a href="{{ route('admin') }}">
-Admin
+    <i class="bi bi-person-gear"></i>
+    Admin
 </a>
-
 
 </div>
 

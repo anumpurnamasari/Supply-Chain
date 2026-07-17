@@ -22,7 +22,7 @@ return new class extends Migration
             ->constrained()
             ->cascadeOnDelete();
 
-
+            $table->bigInteger('population')->nullable();
 
             $table->decimal(
                 'gdp',
@@ -40,7 +40,9 @@ return new class extends Migration
             )
             ->nullable();
 
+            $table->decimal('exports',20,2)->nullable();
 
+            $table->decimal('imports',20,2)->nullable();
 
             $table->integer(
                 'economic_risk'

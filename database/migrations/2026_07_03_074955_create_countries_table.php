@@ -13,9 +13,15 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('code')->nullable();
-            $table->decimal('latitude', 10, 6);
-            $table->decimal('longitude', 10, 6);
+
+            $table->decimal('latitude', 10, 6)->default(0);
+            $table->decimal('longitude', 10, 6)->default(0);
+
             $table->string('currency')->nullable();
+
+            $table->string('region')->nullable();
+            $table->bigInteger('population')->default(0);
+            $table->string('flag')->nullable();
 
             $table->timestamps();
         });

@@ -70,15 +70,4 @@ class ApiTestController extends Controller
         );
     }
 
-    public function ports(PortService $service)
-    {
-        $country = Country::where('code','ID')->first();
-
-        $service->syncPorts($country);
-
-        return Port::where(
-            'country_id',
-            $country->id
-        )->get();
-    }
 }

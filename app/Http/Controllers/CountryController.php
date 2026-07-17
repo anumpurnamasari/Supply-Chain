@@ -2,11 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Services\CountryService;
 
 class CountryController extends Controller
 {
+    public function setActiveCountry(Request $request)
+    {
+    $request->validate([
+        'country_id' => 'required|exists:countries,id'
+    ]);
+
+    session([
+        'active_country' => $request->country_id
+    ]);
+
+    return back();
+    }
+
     public function sync(CountryService $service)
     {
         $totalSaved = 0;

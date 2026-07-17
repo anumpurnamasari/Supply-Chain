@@ -6,37 +6,122 @@ use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\WeatherData;
 use App\Models\RiskScore;
+use App\Services\WeatherService;
 
 class WeatherController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $countries = Country::orderBy('name')->get();
+    $country = Country::find(
+        session('active_country')
+    );
 
-        $country = Country::find($request->country_id);
+    if (!$country) {
 
-        if (!$country) {
-            $country = Country::where('code', 'ID')->first();
+        $country = Country::where(
+            'code',
+            'ID'
+        )->first();
+
+    }
+
+    $weather = WeatherData::where(
+        'country_id',
+        $country->id
+    )
+    ->latest()
+    ->first();
+
+    $risk = RiskScore::where(
+        'country_id',
+        $country->id
+    )
+    ->latest()
+    ->first();
+
+    // GLOBAL WEATHER
+    $allWeather = WeatherData::with('country')->get();
+
+    return view(
+        'pages.weather',
+        compact(
+            'country',
+            'weather',
+            'risk',
+            'allWeather'
+        )
+    );
+    }
+
+    public function syncAll(Request $request, WeatherService $weatherService)
+    {
+    $page = $request->get('page', 1);
+
+    $perPage = 20;
+
+    $countries = Country::skip(
+        ($page - 1) * $perPage
+    )->take($perPage)->get();
+
+    foreach ($countries as $country) {
+
+        try {
+
+            $weatherService->syncWeather($country);
+
+            usleep(300000);
+
+        } catch (\Exception $e) {
+            return $e->getMessage();
+
         }
 
-        $weather = WeatherData::where(
-            'country_id',
-            $country->id
-        )->latest()->first();
+    }
 
-        $risk = RiskScore::where(
-            'country_id',
-            $country->id
-        )->latest()->first();
+    $totalPages = ceil(
+        Country::count() / $perPage
+    );
 
-        return view(
-            'pages.weather',
-            compact(
-                'countries',
-                'country',
-                'weather',
-                'risk'
-            )
-        );
+    // Kalau masih ada halaman berikutnya
+    if ($page < $totalPages) {
+
+        return response("
+            <h2>Sync Weather</h2>
+
+            <p>Page {$page} selesai.</p>
+
+            <p>Melanjutkan ke Page ".($page+1)." ...</p>
+
+            <script>
+
+                setTimeout(function(){
+
+                    window.location.href='/weather/sync-all?page=".($page+1)."';
+
+                },500);
+
+            </script>
+
+        ");
+
+    }
+
+    return "
+
+        <h2>
+
+        ✅ Weather Sync Finished
+
+        </h2>
+
+        <p>
+
+        Total Country :
+
+        ".Country::count()."
+
+        </p>
+
+    ";
     }
 }

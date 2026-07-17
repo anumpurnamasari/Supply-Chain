@@ -13,6 +13,8 @@ use App\Http\Controllers\NewsPageController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DataVisualizationController;
+use App\Http\Controllers\RiskController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -43,9 +45,20 @@ use App\Http\Controllers\ApiTestController;
 Route::get('/api-test', [ApiTestController::class,'index'])
     ->name('api.test');
 
+Route::post(
+    '/active-country',
+    [CountryController::class, 'setActiveCountry']
+)->name('country.active');
 
-Route::get('/countries/sync', [CountryController::class, 'sync'])
-    ->name('countries.sync');
+Route::get(
+    '/countries/sync',
+    [CountryController::class, 'sync']
+)->name('countries.sync');
+
+Route::get(
+    '/currency/sync-all',
+    [CurrencyController::class, 'syncAll']
+)->name('currency.sync.all');
 
 Route::get('/weather',
 [
@@ -62,6 +75,11 @@ Route::get(
 Route::get('/economic/sync', [EconomicController::class, 'sync'])
     ->name('economic.sync');
 
+Route::get(
+    '/economic/sync-all',
+    [EconomicController::class, 'syncAll']
+)->name('economic.sync.all');
+
 Route::get('/ports',
 [
     PortController::class,
@@ -70,15 +88,15 @@ Route::get('/ports',
 ->name('ports');
 
 
+Route::get(
+    '/news',
+    [NewsController::class,'index']
+)->name('news');
 
-Route::get('/news',
-[
-    NewsPageController::class,
-    'index'
-])
-->name('news');
-
-
+Route::get(
+    '/news/sync',
+    [NewsController::class,'sync']
+)->name('news.sync');
 
 Route::get('/compare',
 [
@@ -87,16 +105,16 @@ Route::get('/compare',
 ])
 ->name('compare');
 
+Route::get('/watchlist', [WatchlistController::class, 'index'])
+    ->name('watchlist');
 
+Route::post('/watchlist/{country}', [WatchlistController::class, 'store'])
+    ->name('watchlist.store');
 
-Route::get('/watchlist',
-[
-    WatchlistController::class,
-    'index'
-])
-->name('watchlist');
+Route::delete('/watchlist/{country}', [WatchlistController::class, 'destroy'])
+    ->name('watchlist.destroy');
 
-
+Route::get('/risk/calculate-all', [RiskController::class, 'calculateAll']);
 
 Route::get('/admin',
 [
@@ -109,6 +127,21 @@ Route::get(
     '/ports/import',
     [PortController::class,'import']
 )->name('ports.import');
+
+Route::get(
+    '/visualization',
+    [DataVisualizationController::class, 'index']
+)->name('visualization');
+
+Route::get(
+    '/risk',
+    [RiskController::class,'index']
+)->name('risk');
+
+Route::get(
+    '/weather/sync-all',
+    [WeatherController::class,'syncAll']
+)->name('weather.sync.all');
 
 Route::get('/api-test', [ApiTestController::class,'index']);
 

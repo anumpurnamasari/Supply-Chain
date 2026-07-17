@@ -29,9 +29,12 @@ class PortImportService
 
             $data = array_combine($header, $row);
 
+            $countryName = trim(explode('--', $data['Country Code'])[0]);
+
             $country = Country::where(
                 'name',
-                trim($data['Country Code'])
+                'like',
+                "%{$countryName}%"
             )->first();
 
             if (!$country) {

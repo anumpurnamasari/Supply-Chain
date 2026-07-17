@@ -10,46 +10,25 @@ return new class extends Migration
 
 public function up(): void
 {
+    Schema::create('countries', function (Blueprint $table) {
+    $table->id();
 
-Schema::create('news_caches', function(Blueprint $table){
+    $table->string('name');
+    $table->string('code')->nullable();
 
+    $table->decimal('latitude',10,6)->default(0);
+    $table->decimal('longitude',10,6)->default(0);
 
-$table->id();
+    $table->string('currency')->nullable();
 
+    $table->string('region')->nullable();
+    $table->bigInteger('population')->default(0);
+    $table->string('flag')->nullable();
 
-$table
-->foreignId('country_id')
-->constrained()
-->cascadeOnDelete();
-
-
-$table->string('title');
-
-
-$table->text('description')
-->nullable();
-
-
-$table->string('source')
-->nullable();
-
-
-$table->string('sentiment')
-->nullable();
-
-
-$table->integer('sentiment_score')
-->default(0);
-
-
-$table->timestamps();
-
-
+    $table->timestamps();
 });
 
-
 }
-
 
 
 public function down(): void

@@ -66,13 +66,19 @@ class DashboardController extends Controller
     // ACTIVE COUNTRY
     // ======================
 
-    if ($request->filled('country_id')) {
+    $countryId = session('active_country');
 
-        $country = Country::find($request->country_id);
+    if ($countryId) {
+
+        $country = Country::find($countryId);
 
     } else {
 
         $country = Country::where('code', 'ID')->first();
+
+        session([
+            'active_country' => $country->id
+        ]);
 
     }
 
@@ -95,56 +101,7 @@ $economic = $this->worldBankService->getEconomic(
 // ======================
 
 $this->currencyService->syncCurrency($country);
-    // ======================
-// UPDATE NEWS
-// ======================
 
-$cachedNews = NewsCache::where('country_id', $country->id)
-    ->where('updated_at', '>=', now()->subHours(6))
-    ->count();
-
-if ($cachedNews == 0) {
-
-    $result = $this->newsService->getNews($country->name);
-
-    if (isset($result['articles'])) {
-
-
-        NewsCache::where('country_id', $country->id)->delete();
-
-        foreach ($result['articles'] as $article) {
-
-            $text = ($article['title'] ?? '') . ' ' . ($article['description'] ?? '');
-
-            $sentiment = $this->sentimentService->analyze($text);
-
-            NewsCache::create([
-
-                'country_id' => $country->id,
-
-                'title' => $article['title'] ?? '-',
-
-                'description' => $article['description'] ?? null,
-
-                'source' => $article['source']['name'] ?? null,
-
-                'url' => $article['url'] ?? null,
-
-                'image' => $article['image'] ?? null,
-
-                'published_at' => $article['publishedAt'] ?? null,
-
-                'sentiment' => $sentiment['type'],
-
-                'sentiment_score' => $sentiment['score']
-
-            ]);
-
-        }
-
-    }
-
-}
 
     // ======================
     // AUTO CALCULATE RISK
@@ -186,7 +143,7 @@ if ($cachedNews == 0) {
                 'source'          => $article['source']['name'] ?? null,
                 'url'             => $article['url'] ?? null,
                 'image'           => $article['image'] ?? null,
-                'published_at'    => $article['publishedAt'] ?? null,
+                'published_at' => isset($article['publishedAt']) ? date('Y-m-d H:i:s', strtotime($article['publishedAt'])): null,
                 'sentiment'       => $sentiment['type'],
                 'sentiment_score' => $sentiment['score']
             ]);

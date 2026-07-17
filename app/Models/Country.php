@@ -21,4 +21,9 @@ class Country extends Model
     {
         return $this->hasMany(WeatherData::class);
     }
+
+    public function watchlist()
+    {
+        return $this->hasOne(Watchlist::class);
+    }
 }

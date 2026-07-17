@@ -4,10 +4,12 @@
 
 <div class="module-header">
 
-    <h2>💱 Currency Impact Dashboard</h2>
+    <h2>
+        Currency Impact Dashboard
+    </h2>
 
     <p>
-        Real-Time Exchange Rate Intelligence
+        Real-Time Exchange Rate Monitoring
     </p>
 
 </div>
@@ -20,56 +22,20 @@
 
         <div class="card-box text-center">
 
-            <h5>USD / IDR</h5>
-
-            <h2>
-
-                {{ number_format($currency->rate ?? 0) }}
-
-            </h2>
-
-            <span>
+            <h5>
                 Exchange Rate
-            </span>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="col-md-3">
-
-        <div class="card-box text-center">
-
-            <h5>Currency Risk</h5>
-
-            <h2>LOW</h2>
-
-            <span>
-                Stable
-            </span>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="col-md-3">
-
-        <div class="card-box text-center">
-
-            <h5>Daily Change</h5>
+            </h5>
 
             <h2>
 
-                +0.42%
+                {{ number_format($currency->exchange_rate ?? 0,2) }}
 
             </h2>
 
             <span>
-                Last 24 Hours
+
+                USD / {{ $currency->currency ?? '-' }}
+
             </span>
 
         </div>
@@ -82,7 +48,67 @@
 
         <div class="card-box text-center">
 
-            <h5>Updated</h5>
+            <h5>
+
+                Currency
+
+            </h5>
+
+            <h2>
+
+                {{ $country->currency }}
+
+            </h2>
+
+            <span>
+
+                Active Country Currency
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-md-3">
+
+        <div class="card-box text-center">
+
+            <h5>
+
+                Risk Score
+
+            </h5>
+
+            <h2>
+
+                {{ $currency->currency_risk ?? 0 }}
+
+            </h2>
+
+            <span>
+
+                Currency Risk
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-md-3">
+
+        <div class="card-box text-center">
+
+            <h5>
+
+                Last Update
+
+            </h5>
 
             <h2>
 
@@ -92,7 +118,7 @@
 
             <span>
 
-                Today
+                {{ optional($currency)->updated_at?->format('d M Y') ?? '-' }}
 
             </span>
 
@@ -113,7 +139,9 @@
         <div class="card-box">
 
             <h5>
-                📈 Currency Trend
+
+                Exchange Rate Trend
+
             </h5>
 
             <canvas id="currencyChart"></canvas>
@@ -129,38 +157,68 @@
         <div class="card-box">
 
             <h5>
-                📊 Currency Analysis
+
+                Currency Information
+
             </h5>
 
             <br>
 
-            <p>
+            <table class="table table-borderless text-white">
 
-                <b>Exchange Rate</b><br>
+                <tr>
 
-                {{ number_format($currency->rate ?? 0) }} IDR
+                    <td width="45%">Country</td>
 
-            </p>
+                    <td>{{ $country->name }}</td>
 
-            <hr>
+                </tr>
 
-            <p>
+                <tr>
 
-                <b>Import Cost</b><br>
+                    <td>Currency</td>
 
-                Stable
+                    <td>{{ $country->currency }}</td>
 
-            </p>
+                </tr>
 
-            <hr>
+                <tr>
 
-            <p>
+                    <td>Exchange Rate</td>
 
-                <b>Recommendation</b><br>
+                    <td>
 
-                Suitable for Import
+                        {{ number_format($currency->exchange_rate ?? 0,2) }}
 
-            </p>
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Currency Risk</td>
+
+                    <td>
+
+                        {{ $currency->currency_risk ?? 0 }}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Last Update</td>
+
+                    <td>
+
+                        {{ optional($currency)->updated_at?->format('d M Y H:i') ?? '-' }}
+
+                    </td>
+
+                </tr>
+
+            </table>
 
         </div>
 
@@ -172,55 +230,90 @@
 
 
 
+
 @section('script')
 
 <script>
 
-new Chart(
+const currentRate = {{ $currency->exchange_rate ?? 1 }};
 
-document.getElementById('currencyChart'),
+const ctx = document.getElementById('currencyChart');
 
-{
+new Chart(ctx,{
 
-type:'line',
+    type:'line',
 
-data:{
+    data:{
 
-labels:[
+        labels:[
+            'Mon',
+            'Tue',
+            'Wed',
+            'Thu',
+            'Fri',
+            'Sat',
+            'Sun'
+        ],
 
-'Mon',
-'Tue',
-'Wed',
-'Thu',
-'Fri',
-'Sat',
-'Sun'
+        datasets:[{
 
-],
+            label:'Exchange Rate',
 
-datasets:[{
+            data:[
 
-label:'USD / IDR',
+                currentRate*0.99,
 
-data:[
+                currentRate*1.00,
 
-17880,
-17920,
-17910,
-17950,
-17930,
-17960,
-{{ $currency->rate ?? 17987 }}
+                currentRate*1.01,
 
-],
+                currentRate*0.995,
 
-borderWidth:3,
+                currentRate*1.02,
 
-tension:.4
+                currentRate*1.015,
 
-}]
+                currentRate
 
-}
+            ],
+
+            borderWidth:3,
+
+            tension:.4,
+
+            fill:true,
+
+            pointRadius:4
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+
+            legend:{
+
+                display:true
+
+            }
+
+        },
+
+        scales:{
+
+            y:{
+
+                beginAtZero:false
+
+            }
+
+        }
+
+    }
 
 });
 
