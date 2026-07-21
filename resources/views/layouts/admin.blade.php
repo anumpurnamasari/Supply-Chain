@@ -263,12 +263,10 @@ transform:scale(1.1);
 
 /* CONTENT */
 
-.content{
-
-margin-left:250px;
-
-padding:25px;
-
+.main-content{
+    margin-left:0;
+    width:100%;
+    padding:40px;
 }
 
 
@@ -708,75 +706,6 @@ transform:translateX(5px);
 
 <body>
 
-
-<!-- SIDEBAR -->
-
-<div class="sidebar">
-
-
-<div class="logo">
-
-ANNATLAS
-
-</div>
-
-<div class="menu">
-
-<a href="{{ route('dashboard') }}">
-    <i class="bi bi-grid-1x2-fill"></i>
-    Dashboard
-</a>
-
-<a href="{{ route('risk') }}">
-    <i class="bi bi-speedometer2"></i>
-    Risk Scoring
-</a>
-
-<a href="{{ route('weather') }}">
-    <i class="bi bi-cloud-rain"></i>
-    Weather Risk
-</a>
-
-<a href="{{ route('currency') }}">
-    <i class="bi bi-currency-exchange"></i>
-    Currency Impact
-</a>
-
-<a href="{{ route('news') }}">
-    <i class="bi bi-newspaper"></i>
-    News Intelligence
-</a>
-
-<a href="{{ route('ports') }}">
-    <i class="bi bi-geo-alt"></i>
-    Port Monitoring
-</a>
-
-<a href="{{ route('visualization') }}">
-    <i class="bi bi-bar-chart-line"></i>
-    Data Visualization
-</a>
-
-<a href="{{ route('compare') }}">
-    <i class="bi bi-globe-americas"></i>
-    Country Compare
-</a>
-
-<a href="{{ route('watchlist') }}">
-    <i class="bi bi-star"></i>
-    Watchlist
-</a>
-
-</div>
-
-
-</div>
-
-
-
-
-
-
 <!-- CONTENT -->
 
 <div class="content">
@@ -1142,6 +1071,41 @@ color:#061826;
 .logout-btn:hover{
     background:#bb2d3b;
     transform:translateY(-2px);
+}
+
+
+/* FIX LARAVEL PAGINATION */
+.pagination svg{
+    width:18px !important;
+    height:18px !important;
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.pagination a,
+.pagination span{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.pagination{
+    gap:6px;
+}
+
+nav svg{
+    width:18px !important;
+    height:18px !important;
+}
+
+nav span svg{
+    width:18px !important;
+    height:18px !important;
+}
+
+nav a svg{
+    width:18px !important;
+    height:18px !important;
 }
 
 </style>

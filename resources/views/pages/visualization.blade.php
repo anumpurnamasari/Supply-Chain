@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="module-header">
-    <h2>📊 Data Visualization Dashboard</h2>
+    <h2>Data Visualization Dashboard</h2>
     <p>Global Supply Chain Analytics</p>
 </div>
 

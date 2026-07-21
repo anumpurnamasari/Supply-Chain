@@ -16,6 +16,7 @@ use App\Services\SentimentService;
 use App\Services\WeatherService;
 use App\Services\WorldBankService;
 use App\Services\CurrencyService;
+use Illuminate\Support\Facades\Auth;
 
 
 class DashboardController extends Controller
@@ -56,6 +57,8 @@ class DashboardController extends Controller
 
     public function index(Request $request)
 {
+
+
     // ======================
     // LIST COUNTRY
     // ======================
@@ -163,9 +166,28 @@ $this->currencyService->syncCurrency($country);
         ->latest()
         ->first();
 
-    $economic = EconomicData::where('country_id', $country->id ?? 0)
-        ->latest()
-        ->first();
+    $economic = EconomicData::where('country_id', $country->id)
+    ->where(function ($q) {
+        $q->where('gdp', '>', 0)
+          ->orWhere('inflation', '>', 0);
+    })
+    ->latest()
+    ->first();
+
+    $economicTrend = EconomicData::where('country_id', $country->id)
+    ->where('gdp', '>', 0)
+    ->orderBy('created_at', 'asc')
+    ->get();
+
+    $currencyTrend = CurrencyRate::where('country_id', $country->id)
+        ->orderBy('created_at')
+        ->take(10)
+        ->get();
+
+    $riskTrend = RiskScore::where('country_id', $country->id)
+        ->orderBy('created_at')
+        ->take(10)
+        ->get();
 
     $news = NewsCache::where('country_id', $country->id)
         ->latest()
@@ -189,19 +211,89 @@ $this->currencyService->syncCurrency($country);
     ];
 
     return view(
-        'dashboard',
-        compact(
-            'countries',
-            'country',
-            'weather',
-            'risk',
-            'ports',
-            'currency',
-            'economic',
-            'news',
-            'riskChart'
-        )
-    );
+    'dashboard',
+    compact(
+        'countries',
+        'country',
+        'weather',
+        'risk',
+        'ports',
+        'currency',
+        'economic',
+        'news',
+        'riskChart',
+
+        'economicTrend',
+        'currencyTrend',
+        'riskTrend'
+    )
+);
+}
+
+public function countryData(Country $country)
+{
+
+    $this->weatherService->syncWeather($country);
+
+    $weather = WeatherData::where('country_id', $country->id)
+        ->latest()
+        ->first();
+
+    $currency = CurrencyRate::where('country_id', $country->id)
+        ->latest()
+        ->first();
+
+    $economic = EconomicData::where('country_id', $country->id)
+        ->latest()
+        ->first();
+
+    $economicTrend = EconomicData::where('country_id', $country->id)
+    ->where('gdp', '>', 0)
+    ->orderBy('created_at', 'asc')
+    ->get();
+
+    $currencyTrend = CurrencyRate::where('country_id', $country->id)
+        ->orderBy('created_at')
+        ->take(10)
+        ->get();
+
+    $riskTrend = RiskScore::where('country_id', $country->id)
+        ->orderBy('created_at')
+        ->take(10)
+        ->get();
+
+    $risk = RiskScore::where('country_id', $country->id)
+        ->latest()
+        ->first();
+
+    $news = NewsCache::where('country_id', $country->id)
+    ->latest()
+    ->take(5)
+    ->get();
+
+    return response()->json([
+    'country'         => $country,
+    'weather'         => $weather,
+    'currency'        => $currency,
+    'economic'        => $economic,
+    'risk'            => $risk,
+    'news'            => $news,
+
+    'economicTrend'   => $economicTrend,
+    'currencyTrend'   => $currencyTrend,
+    'riskTrend'       => $riskTrend,
+]);
+}
+
+public function setActiveCountry(Request $request)
+{
+    session([
+        'active_country' => $request->country_id
+    ]);
+
+    return response()->json([
+        'success' => true
+    ]);
 }
 
 

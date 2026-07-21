@@ -10,7 +10,7 @@
         </h2>
 
         <p class="text-muted">
-            ChainPulse External API Monitoring
+            ANNATLAS External API Monitoring
         </p>
     </div>
 

@@ -8,19 +8,43 @@ class NewsService
 {
     public function getNews($country)
     {
-        $keyword = '"' . $country . '" AND (logistics OR trade OR shipping OR economy)';
+        $queries = [
 
-        $response = Http::get(
-            'https://gnews.io/api/v4/search',
-            [
-                'q' => $keyword,
-                'lang' => 'en',
-                'max' => 20,
-                'sortby' => 'publishedAt',
-                'apikey' => env('GNEWS_API_KEY')
-            ]
-        );
+            '"' . $country . '" AND (logistics OR shipping OR trade OR economy)',
 
-        return $response->json();
+            '"' . $country . '" economy',
+
+            '"' . $country . '"',
+
+            'global supply chain',
+
+        ];
+
+        foreach ($queries as $keyword) {
+
+            $response = Http::get(
+                'https://gnews.io/api/v4/search',
+                [
+                    'q'       => $keyword,
+                    'lang'    => 'en',
+                    'max'     => 20,
+                    'sortby'  => 'publishedAt',
+                    'apikey'  => env('GNEWS_API_KEY')
+                ]
+            );
+
+            $data = $response->json();
+
+            if (
+                isset($data['articles']) &&
+                count($data['articles']) > 0
+            ) {
+                return $data;
+            }
+        }
+
+        return [
+            'articles' => []
+        ];
     }
 }

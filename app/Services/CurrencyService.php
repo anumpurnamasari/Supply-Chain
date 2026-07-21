@@ -29,23 +29,14 @@ class CurrencyService
 
         $risk = $this->calculateRisk($rate);
 
-        CurrencyRate::updateOrCreate(
+        CurrencyRate::create([
 
-            [
-                'country_id' => $country->id
-            ],
+            'country_id'     => $country->id,
+            'currency'       => $country->currency,
+            'exchange_rate'  => $rate,
+            'currency_risk'  => $risk
 
-            [
-
-                'currency' => $country->currency,
-
-                'exchange_rate' => $rate,
-
-                'currency_risk' => $risk
-
-            ]
-
-        );
+        ]);
 
         return true;
 

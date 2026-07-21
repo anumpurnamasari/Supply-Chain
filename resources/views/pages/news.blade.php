@@ -4,7 +4,7 @@
 
 <div class="module-header">
 
-    <h2>📰 News Intelligence</h2>
+    <h2>News Intelligence</h2>
 
     <h5>{{ $country->name }}</h5>
 

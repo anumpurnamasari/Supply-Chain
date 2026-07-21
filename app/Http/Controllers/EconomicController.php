@@ -38,22 +38,17 @@ class EconomicController extends Controller
 
         $risk = min($risk, 100);
 
-        $economic = EconomicData::updateOrCreate(
+        $economic = EconomicData::create([
 
-            [
-                'country_id' => $country->id
-            ],
+            'country_id'     => $country->id,
+            'gdp'            => $data['gdp'],
+            'inflation'      => $data['inflation'],
+            'population'     => $data['population'],
+            'exports'        => $data['exports'],
+            'imports'        => $data['imports'],
+            'economic_risk'  => $risk
 
-            [
-                'gdp' => $data['gdp'],
-                'inflation' => $data['inflation'],
-                'population' => $data['population'],
-                'exports' => $data['exports'],
-                'imports' => $data['imports'],
-                'economic_risk' => $risk
-            ]
-
-        );
+        ]);
 
         return response()->json([
 
@@ -95,19 +90,17 @@ class EconomicController extends Controller
                 $risk += 20;
             }
 
-            EconomicData::updateOrCreate(
-                [
-                    'country_id' => $country->id
-                ],
-                [
-                    'gdp' => $data['gdp'],
-                    'inflation' => $data['inflation'],
-                    'population' => $data['population'],
-                    'exports' => $data['exports'],
-                    'imports' => $data['imports'],
-                    'economic_risk' => min($risk, 100)
-                ]
-            );
+            EconomicData::create([
+
+                'country_id' => $country->id,
+                'gdp' => $data['gdp'],
+                'inflation' => $data['inflation'],
+                'population' => $data['population'],
+                'exports' => $data['exports'],
+                'imports' => $data['imports'],
+                'economic_risk' => min($risk,100)
+
+            ]);
 
             usleep(500000); // 0.5 detik
 

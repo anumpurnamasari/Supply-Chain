@@ -62,7 +62,7 @@
 
             <span>
 
-                Active Country Currency
+                Country Currency
 
             </span>
 

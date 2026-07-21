@@ -200,31 +200,23 @@ class RiskCalculatorService
         // SAVE DATABASE
         // ==========================
 
-        return RiskScore::updateOrCreate(
+        return RiskScore::create([
 
-            [
+            'country_id'      => $countryId,
 
-                'country_id' => $countryId
+            'weather_score'   => round($weatherScore),
 
-            ],
+            'inflation_score' => round($inflationScore),
 
-            [
+            'currency_score'  => round($currencyScore),
 
-                'weather_score' => round($weatherScore),
+            'news_score'      => round($newsScore),
 
-                'inflation_score' => round($inflationScore),
+            'total_score'     => round($total),
 
-                'currency_score' => round($currencyScore),
+            'risk_level'      => $level
 
-                'news_score' => round($newsScore),
-
-                'total_score' => round($total),
-
-                'risk_level' => $level
-
-            ]
-
-        );
+        ]);
     }
 
     public function calculateAll()

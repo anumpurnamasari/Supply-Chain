@@ -93,12 +93,25 @@ class NewsController extends Controller
             $country->name
         );
 
+        if (isset($result['articles'])) {
+    $result['articles'] = collect($result['articles'])
+        ->unique(function ($article) {
+            // Jika URL ada, gunakan URL sebagai kunci
+            return $article['url'] ?? ($article['title'] ?? '');
+        })
+        ->values()
+        ->toArray();
+}
+
         if (
             !isset($result['articles']) ||
             count($result['articles']) == 0
         ) {
 
-            return "Tidak ada berita ditemukan";
+            return back()->with(
+                'error',
+                'No news available for this country.'
+            );
 
         }
 
@@ -108,6 +121,14 @@ class NewsController extends Controller
         )->delete();
 
         foreach ($result['articles'] as $article) {
+
+            if (
+                NewsCache::where('country_id', $country->id)
+                    ->where('title', $article['title'] ?? '')
+                    ->exists()
+            ) {
+                continue;
+            }
 
             $text =
                 ($article['title'] ?? '') . ' ' .

@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 @extends('layouts.app')
 
 
@@ -6,15 +10,28 @@
 
 <!-- HEADER -->
 
-<div class="module-header">
+<div class="admin-header">
 
-<h2>
-🌐 ChainPulse Command Center
-</h2>
+    <div class="admin-info">
 
-<p>
-Global Supply Chain Risk Intelligence Overview
-</p>
+        <div class="admin-icon">
+            <i class="bi bi-person-circle"></i>
+        </div>
+
+        <div>
+            <h2>Welcome, {{ Auth::user()->name }}</h2>
+            <p>user Access</p>
+        </div>
+
+    </div>
+
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="logout-btn">
+            <i class="bi bi-box-arrow-right"></i>
+            Logout
+        </button>
+    </form>
 
 </div>
 
@@ -25,7 +42,7 @@ Global Supply Chain Risk Intelligence Overview
         <div class="col-md-6">
 
             <h5 class="mb-2">
-                🌍 Select Country
+                Select Country
             </h5>
 
             <small>
@@ -37,57 +54,37 @@ Global Supply Chain Risk Intelligence Overview
 
         <div class="col-md-6">
 
-            <form method="POST" action="{{ route('country.active') }}">
 
-                @csrf
+            <select id="countrySelect" class="form-select">
+    @foreach($countries as $item)
+        <option
+            value="{{ $item->id }}"
+            {{ session('active_country', $country->id) == $item->id ? 'selected' : '' }}>
+            {{ $item->name }}
+        </option>
+    @endforeach
+</select>
 
-                    <select
-                    name="country_id"
-                    class="form-select"
-                    onchange="this.form.submit()">
-
-                    @foreach($countries as $item)
-
-                        <option
-                            value="{{ $item->id }}"
-                            {{ session('active_country', $country->id) == $item->id ? 'selected' : '' }}>
-
-                            {{ $item->name }}
-
-                        </option>
-
-                    @endforeach
-
-                    @php
-    $isFavorite = \App\Models\Watchlist::where('country_id', $country->id)->exists();
+@php
+    $isFavorite = \App\Models\Watchlist::where('country_id',$country->id)->exists();
 @endphp
 
 @if(!$isFavorite)
-
-<form action="{{ route('watchlist.store', $country->id) }}" method="POST" class="mt-2">
+<form action="{{ route('watchlist.store',$country->id) }}" method="POST" class="mt-2">
     @csrf
-
     <button class="btn btn-warning btn-sm w-100">
         ⭐ Add to Watchlist
     </button>
 </form>
-
 @else
-
-<form action="{{ route('watchlist.destroy', $country->id) }}" method="POST" class="mt-2">
+<form action="{{ route('watchlist.destroy',$country->id) }}" method="POST" class="mt-2">
     @csrf
     @method('DELETE')
-
     <button class="btn btn-danger btn-sm w-100">
         Remove Favorite
     </button>
 </form>
-
 @endif
-
-                </select>
-
-            </form>
 
         </div>
 
@@ -111,7 +108,7 @@ Global Supply Chain Risk Intelligence Overview
                 GDP
             </h5>
 
-            <h2>
+            <h2 id="gdpValue">
 
                 @if($economic && $economic->gdp)
 
@@ -127,7 +124,7 @@ Global Supply Chain Risk Intelligence Overview
 
             <span>
 
-                Gross Domestic Product
+                GrossDomesticProduct
 
             </span>
 
@@ -147,7 +144,7 @@ Global Supply Chain Risk Intelligence Overview
                 Inflation
             </h5>
 
-            <h2>
+            <h2 id="inflationValue">
 
                 {{ number_format($economic->inflation ?? 0, 2) }}%
 
@@ -175,7 +172,7 @@ Global Supply Chain Risk Intelligence Overview
                 Population
             </h5>
 
-            <h2>
+            <h2 id="populationValue">
 
                 {{ number_format(($country->population ?? 0) / 1000000, 1) }} M
 
@@ -203,7 +200,7 @@ Global Supply Chain Risk Intelligence Overview
                 Currency
             </h5>
 
-            <h2>
+            <h2 id="currencyValue">
 
                 {{ $country->currency ?? '-' }}
 
@@ -248,7 +245,7 @@ Global Supply Chain Risk Intelligence Overview
 Supply Chain Risk Composition
 </h5>
 
-<p class="mb-3">
+<p class="mb-3" id="countryName">
 
 {{ $country->name }}
 
@@ -256,6 +253,42 @@ Supply Chain Risk Composition
 
 
 <canvas id="riskChart"></canvas>
+
+<div class="row g-4 mt-3">
+
+    <div class="col-md-6">
+        <div class="card-box analytics-card">
+            <h5>GDP Trend</h5>
+            <canvas id="gdpTrendChart"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card-box analytics-card">
+            <h5>Inflation Trend</h5>
+            <canvas id="inflationTrendChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<div class="row g-4 mt-3">
+
+    <div class="col-md-6">
+        <div class="card-box analytics-card">
+            <h5>Currency Trend</h5>
+            <canvas id="currencyTrendChart"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card-box analytics-card">
+            <h5>Risk Trend</h5>
+            <canvas id="riskTrendChart"></canvas>
+        </div>
+    </div>
+
+</div>
 
 
 
@@ -326,7 +359,7 @@ Supply Chain Risk Composition
 
                     <h6>Temperature</h6>
 
-                    <h3>
+                    <h3 id="temperatureValue">
 
                         {{ number_format($weather->temperature ?? 0,1) }} °C
 
@@ -338,19 +371,18 @@ Supply Chain Risk Composition
 
                     <h6>Rainfall</h6>
 
-                    <h3>
+                    <h3 id="rainfallValue">
 
                         {{ number_format($weather->rainfall ?? 0,1) }} mm
 
                     </h3>
-
                 </div>
 
                 <div class="col-6">
 
                     <h6>Wind Speed</h6>
 
-                    <h3>
+                    <h3 id="windValue">
 
                         {{ number_format($weather->wind_speed ?? 0,1) }} km/h
 
@@ -362,7 +394,7 @@ Supply Chain Risk Composition
 
                     <h6>Storm Risk</h6>
 
-                    <h3>
+                    <h3 id="stormValue">
 
                         {{ $weather->storm_risk ?? 0 }} %
 
@@ -386,7 +418,7 @@ Supply Chain Risk Composition
 
                     <br>
 
-                    <strong>
+                    <strong id="weatherCodeValue">
 
                         {{ $weather->weather_code ?? '-' }}
 
@@ -404,7 +436,7 @@ Supply Chain Risk Composition
 
                     <br>
 
-                    <strong>
+                    <strong id="weatherUpdatedValue">
 
                         {{ optional($weather->updated_at)->format('d M Y H:i') }}
 
@@ -432,7 +464,7 @@ Supply Chain Risk Composition
 
             </h5>
 
-            <div class="alert-list">
+            <div class="alert-list" id="newsContainer">
 
                 @forelse($news as $item)
 
@@ -492,222 +524,406 @@ Supply Chain Risk Composition
 
 </div>
 
-
 @endsection
 
 
 
 @section('script')
 
-
 <script>
 
+const economicTrend = @json($economicTrend);
+const currencyTrend = @json($currencyTrend);
+const riskTrend = @json($riskTrend);
 
-// ======================
-// CHART
-// ======================
-
-
-new Chart(
-
-document.getElementById(
-'riskChart'
-),
-
-
-{
-
-
-type:'doughnut',
-
-
-
-data:{
-
-
-labels:[
-
-'Weather',
-
-'Inflation',
-
-'Currency',
-
-'News'
-
-],
-
-
-
-datasets:[{
-
-
-data:[
-
-{{ $risk->weather_score ?? 0 }},
-
-{{ $risk->inflation_score ?? 0 }},
-
-{{ $risk->currency_score ?? 0 }},
-
-{{ $risk->news_score ?? 0 }}
-
-
-]
-
-
-}]
-
-
-}
-
-
-}
-
+const riskChart = new Chart(
+    document.getElementById('riskChart'),
+    {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Weather',
+                'Inflation',
+                'Currency',
+                'News'
+            ],
+            datasets: [{
+                data: [
+                    {{ $risk->weather_score ?? 0 }},
+                    {{ $risk->inflation_score ?? 0 }},
+                    {{ $risk->currency_score ?? 0 }},
+                    {{ $risk->news_score ?? 0 }}
+                ]
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:false
+        }
+    }
 );
 
-
-
-
-
-
-
-// ======================
-// GLOBAL RISK MAP
-// ======================
-
-
-var map =
-L.map('map')
-.setView(
-
-[
-{{ $country->latitude }},
-{{ $country->longitude }}
-],
-
-5
-
+const gdpTrendChart = new Chart(
+    document.getElementById('gdpTrendChart'),
+    {
+        type: 'line',
+        data: {
+            labels: economicTrend.map(item =>
+                new Date(item.created_at).toLocaleDateString('id-ID')
+            ),
+            datasets: [{
+                label: 'GDP',
+                data: economicTrend.map(item =>
+                    item.gdp / 1000000000
+                ),
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    }
 );
 
+const inflationTrendChart = new Chart(
+    document.getElementById('inflationTrendChart'),
+    {
+        type: 'line',
+        data: {
+            labels: economicTrend.map(item =>
+                new Date(item.created_at).toLocaleDateString('id-ID')
+            ),
+            datasets: [{
+                label: 'Inflation (%)',
+                data: economicTrend.map(item => item.inflation),
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    }
+);
 
+const currencyTrendChart = new Chart(
+    document.getElementById('currencyTrendChart'),
+    {
+        type:'line',
+        data:{
+            labels:currencyTrend.map(item =>
+                new Date(item.created_at).toLocaleDateString()
+            ),
+            datasets:[{
+                label:'Exchange Rate',
+                data:currencyTrend.map(item=>item.exchange_rate),
+                tension:0.4
+            }]
+        },
+        options:{
+            responsive:true
+        }
+    }
+);
+
+const riskTrendChart = new Chart(
+    document.getElementById('riskTrendChart'),
+    {
+        type:'line',
+        data:{
+            labels:riskTrend.map(item =>
+                new Date(item.created_at).toLocaleDateString()
+            ),
+            datasets:[{
+                label:'Risk Score',
+                data:riskTrend.map(item=>item.total_score),
+                tension:0.4
+            }]
+        },
+        options:{
+            responsive:true
+        }
+    }
+);
+
+const map = L.map('map').setView([
+    {{ $country->latitude ?? -6.2 }},
+    {{ $country->longitude ?? 106.8 }}
+],5);
 
 L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        maxZoom:19,
+        attribution:'© OpenStreetMap'
+    }
+).addTo(map);
 
-'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+// ======================================
+// COUNTRY OBJECT
+// ======================================
 
-)
-.addTo(map);
-
-
-
-
-
-
-// ======================
-// ACTIVE COUNTRY MARKER
-// ======================
-
-
-let country = {
-
-
-name:
-
-"{{ $country->name ?? 'Unknown' }}",
-
-
-lat:
-
-{{ $country->latitude ?? -6.2 }},
-
-
-lng:
-
-{{ $country->longitude ?? 106.8 }},
-
-
-risk:
-
-"{{ $risk->risk_level ?? 'LOW' }}",
-
-
-score:
-
-{{ $risk->total_score ?? 0 }}
-
-
+let currentCountry = {
+    name: "{{ $country->name }}",
+    lat: {{ $country->latitude ?? -6.2 }},
+    lng: {{ $country->longitude ?? 106.8 }},
+    risk: "{{ $risk->risk_level ?? 'LOW' }}",
+    score: {{ $risk->total_score ?? 0 }}
 };
 
+// ======================================
+// MARKER
+// ======================================
 
+let marker = L.marker([
+    currentCountry.lat,
+    currentCountry.lng
+]).addTo(map);
 
-
-
-let markerColor;
-
-
-if(
-country.risk == "HIGH"
-){
-
-markerColor =
-"🔴";
-
-}
-else if(
-country.risk == "MEDIUM"
-){
-
-markerColor =
-"🟡";
-
-}
-else{
-
-markerColor =
-"🟢";
-
-}
-
-
-L.marker([
-    country.lat,
-    country.lng
-])
-
-.addTo(map)
-
-.bindPopup(`
-
-<b>${country.name}</b>
-
-<hr>
-
-GDP :
-{{ number_format(($economic->gdp ?? 0) / 1000000000,2) }} B
-
+marker.bindPopup(`
+<b>${currentCountry.name}</b>
 <br>
-
-Inflation :
-{{ number_format($economic->inflation ?? 0,2) }} %
-
-<br>
-
-Temperature :
-{{ number_format($weather->temperature ?? 0,1) }} °C
-
-<br>
-
 Risk :
-${country.risk}
-
-(${country.score}%)
-
+${currentCountry.risk}
+(${currentCountry.score}%)
 `);
 
+// ======================================
+// COUNTRY SELECT
+// ======================================
+
+const countrySelect = document.getElementById('countrySelect');
+
+countrySelect.addEventListener('change',function(){
+
+fetch("{{ route('dashboard.active-country') }}", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+    },
+    body: JSON.stringify({
+        country_id: this.value
+    })
+});
+
+fetch("{{ url('/dashboard/country') }}/"+this.value)
+
+.then(response=>response.json())
+
+.then(data=>{
+
+// ======================================
+// COUNTRY
+// ======================================
+
+document.getElementById('countryName').innerHTML =
+data.country.name;
+
+// ======================================
+// GDP
+// ======================================
+
+document.getElementById('gdpValue').innerHTML =
+data.economic
+? (data.economic.gdp/1000000000).toFixed(2)+' B'
+: '-';
+
+// ======================================
+// INFLATION
+// ======================================
+
+document.getElementById('inflationValue').innerHTML =
+data.economic
+? Number(data.economic.inflation).toFixed(2)+'%'
+: '-';
+
+// ======================================
+// POPULATION
+// ======================================
+
+document.getElementById('populationValue').innerHTML =
+(data.country.population/1000000).toFixed(1)+' M';
+
+// ======================================
+// CURRENCY
+// ======================================
+
+document.getElementById('currencyValue').innerHTML =
+data.country.currency ?? '-';
+
+// ======================================
+// WEATHER
+// ======================================
+
+document.getElementById('temperatureValue').innerHTML =
+data.weather
+? Number(data.weather.temperature).toFixed(1)+' °C'
+: '-';
+
+document.getElementById('rainfallValue').innerHTML =
+data.weather
+? Number(data.weather.rainfall).toFixed(1)+' mm'
+: '-';
+
+document.getElementById('windValue').innerHTML =
+data.weather
+? Number(data.weather.wind_speed).toFixed(1)+' km/h'
+: '-';
+
+document.getElementById('stormValue').innerHTML =
+data.weather
+? data.weather.storm_risk+' %'
+: '-';
+
+document.getElementById('weatherCodeValue').innerHTML =
+data.weather
+? data.weather.weather_code
+: '-';
+
+document.getElementById('weatherUpdatedValue').innerHTML =
+data.weather
+? new Date(data.weather.updated_at).toLocaleString()
+: '-';
+
+// ======================================
+// UPDATE CHART
+// ======================================
+
+riskChart.data.datasets[0].data = [
+    data.risk ? data.risk.weather_score : 0,
+    data.risk ? data.risk.inflation_score : 0,
+    data.risk ? data.risk.currency_score : 0,
+    data.risk ? data.risk.news_score : 0
+];
+
+riskChart.update();
+
+// ======================================
+// UPDATE GDP TREND
+// ======================================
+
+gdpTrendChart.data.labels = data.economicTrend.map(item =>
+    new Date(item.created_at).toLocaleDateString('id-ID')
+);
+
+gdpTrendChart.data.datasets[0].data = data.economicTrend.map(item =>
+    item.gdp / 1000000000
+);
+
+gdpTrendChart.update();
+
+// ======================================
+// UPDATE INFLATION TREND
+// ======================================
+
+inflationTrendChart.data.labels = data.economicTrend.map(item =>
+    new Date(item.created_at).toLocaleDateString('id-ID')
+);
+
+inflationTrendChart.data.datasets[0].data = data.economicTrend.map(item =>
+    item.inflation
+);
+
+inflationTrendChart.update();
+
+// ======================================
+// UPDATE CURRENCY TREND
+// ======================================
+
+currencyTrendChart.data.labels = data.currencyTrend.map(item =>
+    new Date(item.created_at).toLocaleDateString('id-ID')
+);
+
+currencyTrendChart.data.datasets[0].data = data.currencyTrend.map(item =>
+    item.exchange_rate
+);
+
+currencyTrendChart.update();
+
+// ======================================
+// UPDATE RISK TREND
+// ======================================
+
+riskTrendChart.data.labels = data.riskTrend.map(item =>
+    new Date(item.created_at).toLocaleDateString('id-ID')
+);
+
+riskTrendChart.data.datasets[0].data = data.riskTrend.map(item =>
+    item.total_score
+);
+
+riskTrendChart.update();
+
+// ======================================
+// UPDATE MAP
+// ======================================
+
+marker.setLatLng([
+    data.country.latitude,
+    data.country.longitude
+]);
+
+marker.bindPopup(`
+<b>${data.country.name}</b>
+<br>
+Risk :
+${data.risk ? data.risk.risk_level : '-'}
+(${data.risk ? data.risk.total_score : 0}%)
+`);
+
+map.setView([
+    data.country.latitude,
+    data.country.longitude
+],5);
+
+// ======================================
+// UPDATE NEWS
+// ======================================
+
+let html = '';
+
+if (data.news && data.news.length > 0) {
+
+    data.news.forEach(function(item){
+
+        html += `
+        <div class="alert-item">
+
+            <h6>
+                <a href="${item.url}"
+                   target="_blank"
+                   style="color:white;text-decoration:none;">
+                    ${item.title}
+                </a>
+            </h6>
+
+            <span>
+                ${item.source}<br>
+                Sentiment : ${item.sentiment} |
+                Score : ${item.sentiment_score}
+            </span>
+
+        </div>
+        `;
+
+    });
+
+} else {
+
+    html = `<p>No news available.</p>`;
+
+}
+
+document.getElementById('newsContainer').innerHTML = html;
+
+}) // end then
+
+.catch(error=>{
+    console.error(error);
+});
+
+}); // end change event
 
 </script>
 
-
 @endsection
-
