@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 use App\Models\Country;
 use App\Models\WeatherData;
 use App\Models\EconomicData;
 use App\Models\CurrencyRate;
 use App\Models\RiskScore;
-
-use Illuminate\Http\Request;
 
 class CompareController extends Controller
 {
@@ -36,17 +36,59 @@ class CompareController extends Controller
             $countryA = Country::find($request->country_a);
             $countryB = Country::find($request->country_b);
 
-            $weatherA = WeatherData::where('country_id',$countryA->id)->latest()->first();
-            $weatherB = WeatherData::where('country_id',$countryB->id)->latest()->first();
+            // WEATHER
 
-            $economicA = EconomicData::where('country_id',$countryA->id)->latest()->first();
-            $economicB = EconomicData::where('country_id',$countryB->id)->latest()->first();
+            $weatherA = WeatherData::where('country_id', $countryA->id)
+                ->latest()
+                ->first();
 
-            $currencyA = CurrencyRate::where('country_id',$countryA->id)->latest()->first();
-            $currencyB = CurrencyRate::where('country_id',$countryB->id)->latest()->first();
+            $weatherB = WeatherData::where('country_id', $countryB->id)
+                ->latest()
+                ->first();
 
-            $riskA = RiskScore::where('country_id',$countryA->id)->latest()->first();
-            $riskB = RiskScore::where('country_id',$countryB->id)->latest()->first();
+            // ECONOMIC
+
+            $economicA = EconomicData::where('country_id', $countryA->id)
+                ->where(function ($q) {
+                    $q->where('gdp', '>', 0)
+                      ->orWhere('inflation', '>', 0)
+                      ->orWhere('population', '>', 0);
+                })
+                ->latest()
+                ->first();
+
+            $economicB = EconomicData::where('country_id', $countryB->id)
+                ->where(function ($q) {
+                    $q->where('gdp', '>', 0)
+                      ->orWhere('inflation', '>', 0)
+                      ->orWhere('population', '>', 0);
+                })
+                ->latest()
+                ->first();
+
+            // CURRENCY
+
+            $currencyA = CurrencyRate::where('country_id', $countryA->id)
+                ->where('exchange_rate', '>', 0)
+                ->latest()
+                ->first();
+
+            $currencyB = CurrencyRate::where('country_id', $countryB->id)
+                ->where('exchange_rate', '>', 0)
+                ->latest()
+                ->first();
+
+                    // RISK SCORE
+
+            $riskA = RiskScore::where('country_id', $countryA->id)
+                ->where('total_score', '>', 0)
+                ->latest()
+                ->first();
+
+            $riskB = RiskScore::where('country_id', $countryB->id)
+                ->where('total_score', '>', 0)
+                ->latest()
+                ->first();
         }
 
         return view('pages.compare', compact(

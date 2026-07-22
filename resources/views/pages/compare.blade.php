@@ -5,15 +5,11 @@
 <div class="module-header">
 
     <h2>
-
         Country Comparison
-
     </h2>
 
     <p>
-
         Compare Supply Chain Risk Between Countries
-
     </p>
 
 </div>
@@ -27,9 +23,7 @@
             <div class="col-md-5">
 
                 <label class="form-label">
-
                     Country A
-
                 </label>
 
                 <select
@@ -37,7 +31,9 @@
                     class="form-select"
                     required>
 
-                    <option value="">Choose Country</option>
+                    <option value="">
+                        Choose Country
+                    </option>
 
                     @foreach($countries as $country)
 
@@ -58,9 +54,7 @@
             <div class="col-md-5">
 
                 <label class="form-label">
-
                     Country B
-
                 </label>
 
                 <select
@@ -68,7 +62,9 @@
                     class="form-select"
                     required>
 
-                    <option value="">Choose Country</option>
+                    <option value="">
+                        Choose Country
+                    </option>
 
                     @foreach($countries as $country)
 
@@ -89,9 +85,7 @@
             <div class="col-md-2 d-flex align-items-end">
 
                 <button class="btn btn-info w-100">
-
                     Compare
-
                 </button>
 
             </div>
@@ -114,13 +108,20 @@
 
             <hr>
 
-            <p><strong>Region :</strong> {{ $countryA->region }}</p>
+            <div class="d-flex justify-content-between mb-3">
+                <span>Region</span>
+                <strong>{{ $countryA->region }}</strong>
+            </div>
 
-            <p><strong>Currency :</strong> {{ $countryA->currency }}</p>
+            <div class="d-flex justify-content-between mb-3">
+                <span>Currency</span>
+                <strong>{{ $countryA->currency }}</strong>
+            </div>
 
-            <p><strong>Population :</strong>
-                {{ number_format($economicA->population ?? 0) }}
-            </p>
+            <div class="d-flex justify-content-between">
+                <span>Population</span>
+                <strong>{{ number_format($economicA->population ?? 0) }}</strong>
+            </div>
 
         </div>
 
@@ -134,13 +135,20 @@
 
             <hr>
 
-            <p><strong>Region :</strong> {{ $countryB->region }}</p>
+            <div class="d-flex justify-content-between mb-3">
+                <span>Region</span>
+                <strong>{{ $countryB->region }}</strong>
+            </div>
 
-            <p><strong>Currency :</strong> {{ $countryB->currency }}</p>
+            <div class="d-flex justify-content-between mb-3">
+                <span>Currency</span>
+                <strong>{{ $countryB->currency }}</strong>
+            </div>
 
-            <p><strong>Population :</strong>
-                {{ number_format($economicB->population ?? 0) }}
-            </p>
+            <div class="d-flex justify-content-between">
+                <span>Population</span>
+                <strong>{{ number_format($economicB->population ?? 0) }}</strong>
+            </div>
 
         </div>
 
@@ -154,152 +162,152 @@
 
         <thead>
 
-            <tr>
+        <tr>
 
-                <th>Metric</th>
+            <th>Metric</th>
 
-                <th>{{ $countryA->name }}</th>
+            <th>{{ $countryA->name }}</th>
 
-                <th>{{ $countryB->name }}</th>
+            <th>{{ $countryB->name }}</th>
 
-            </tr>
+        </tr>
 
         </thead>
 
         <tbody>
 
-            <tr>
+        <tr>
 
-                <td>Weather Risk</td>
+            <td>Weather Risk</td>
 
-                <td class="{{ ($weatherA->storm_risk ?? 999) < ($weatherB->storm_risk ?? 999) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ $weatherA->storm_risk ?? '-' }}
-                </td>
+            <td class="{{ ($weatherA->storm_risk ?? 999) < ($weatherB->storm_risk ?? 999) ? 'text-success fw-bold':'text-danger' }}">
+                {{ $weatherA->storm_risk ?? '-' }} %
+            </td>
 
-                <td class="{{ ($weatherB->storm_risk ?? 999) < ($weatherA->storm_risk ?? 999) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ $weatherB->storm_risk ?? '-' }}
-                </td>
-            </tr>
+            <td class="{{ ($weatherB->storm_risk ?? 999) < ($weatherA->storm_risk ?? 999) ? 'text-success fw-bold':'text-danger' }}">
+                {{ $weatherB->storm_risk ?? '-' }} %
+            </td>
 
-            <tr>
+        </tr>
 
-                <td>Inflation</td>
+        <tr>
 
-                <td class="{{ ($economicA->inflation ?? 999) < ($economicB->inflation ?? 999) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ $economicA->inflation ?? '-' }}
-                </td>
+            <td>Inflation</td>
 
-                <td class="{{ ($economicB->inflation ?? 999) < ($economicA->inflation ?? 999) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ $economicB->inflation ?? '-' }}
-                </td>
+            <td class="{{ ($economicA->inflation ?? 999) < ($economicB->inflation ?? 999) ? 'text-success fw-bold':'text-danger' }}">
+                {{ $economicA->inflation ?? '-' }} %
+            </td>
 
-            </tr>
+            <td class="{{ ($economicB->inflation ?? 999) < ($economicA->inflation ?? 999) ? 'text-success fw-bold':'text-danger' }}">
+                {{ $economicB->inflation ?? '-' }} %
+            </td>
 
-            <tr>
+        </tr>
 
-                <td>GDP</td>
+        <tr>
 
-                <td class="{{ ($economicA->gdp ?? 0) > ($economicB->gdp ?? 0) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ number_format($economicA->gdp ?? 0) }}
-                </td>
+            <td>GDP</td>
 
-                <td class="{{ ($economicB->gdp ?? 0) > ($economicA->gdp ?? 0) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ number_format($economicB->gdp ?? 0) }}
-                </td>
+            <td class="{{ ($economicA->gdp ?? 0) > ($economicB->gdp ?? 0) ? 'text-success fw-bold':'text-danger' }}">
+                {{ number_format($economicA->gdp ?? 0) }}
+            </td>
 
-            </tr>
+            <td class="{{ ($economicB->gdp ?? 0) > ($economicA->gdp ?? 0) ? 'text-success fw-bold':'text-danger' }}">
+                {{ number_format($economicB->gdp ?? 0) }}
+            </td>
 
-            <tr>
+        </tr>
 
-                <td>Population</td>
+        <tr>
 
-                <td>{{ number_format($economicA->population ?? 0) }}</td>
+            <td>Population</td>
 
-                <td>{{ number_format($economicB->population ?? 0) }}</td>
+            <td>{{ number_format($economicA->population ?? 0) }}</td>
 
-            </tr>
+            <td>{{ number_format($economicB->population ?? 0) }}</td>
 
-            <tr>
+        </tr>
 
-                <td>Exchange Rate Risk</td>
+                <tr>
 
-                <td class="{{ ($currencyA->currency_risk ?? 999) < ($currencyB->currency_risk ?? 999) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ $currencyA->currency_risk ?? '-' }}
-                </td>
+            <td>Exchange Rate Risk</td>
 
-                <td class="{{ ($currencyB->currency_risk ?? 999) < ($currencyA->currency_risk ?? 999) ? 'text-success fw-bold' : 'text-danger' }}">
-                    {{ $currencyB->currency_risk ?? '-' }}
-                </td>
+            <td class="{{ ($riskA->currency_score ?? 999) < ($riskB->currency_score ?? 999) ? 'text-success fw-bold':'text-danger' }}">
+                {{ $riskA->currency_score ?? '-' }}
+            </td>
 
-            </tr>
+            <td class="{{ ($riskB->currency_score ?? 999) < ($riskA->currency_score ?? 999) ? 'text-success fw-bold':'text-danger' }}">
+                {{ $riskB->currency_score ?? '-' }}
+            </td>
 
-            <tr>
+        </tr>
 
-                <td>News Score</td>
+        <tr>
 
-                <td>{{ $riskA->news_score ?? '-' }}</td>
+            <td>News Score</td>
 
-                <td>{{ $riskB->news_score ?? '-' }}</td>
+            <td>{{ $riskA->news_score ?? '-' }}</td>
 
-            </tr>
+            <td>{{ $riskB->news_score ?? '-' }}</td>
 
-            <tr>
+        </tr>
 
-                <td><strong>Total Risk Score</strong></td>
+        <tr>
 
-                <td>
+            <td><strong>Total Risk Score</strong></td>
 
-                    <strong>
+            <td class="fw-bold">
+                {{ $riskA->total_score ?? '-' }}
+            </td>
 
-                        {{ $riskA->total_score ?? '-' }}
+            <td class="fw-bold">
+                {{ $riskB->total_score ?? '-' }}
+            </td>
 
-                    </strong>
+        </tr>
 
-                </td>
+        <tr>
 
-                <td>
+            <td><strong>Risk Level</strong></td>
 
-                    <strong>
+            <td class="{{ ($riskA->total_score ?? 999) < ($riskB->total_score ?? 999)
+                ? 'text-success fw-bold'
+                : 'text-danger fw-bold' }}">
 
-                        {{ $riskB->total_score ?? '-' }}
+                {{ strtoupper($riskA->risk_level ?? '-') }}
 
-                    </strong>
+            </td>
 
-                </td>
+            <td class="{{ ($riskB->total_score ?? 999) < ($riskA->total_score ?? 999)
+                ? 'text-success fw-bold'
+                : 'text-danger fw-bold' }}">
 
-            </tr>
+                {{ strtoupper($riskB->risk_level ?? '-') }}
 
-            <tr>
+            </td>
 
-                <td><strong>Risk Level</strong></td>
-
-                <td class="{{ ($riskA->total_score ?? 999) < ($riskB->total_score ?? 999) ? 'text-success fw-bold fs-5' : 'text-danger fs-5' }}">
-                    {{ $riskA->total_score ?? '-' }}
-                </td>
-
-                <td class="{{ ($riskB->total_score ?? 999) < ($riskA->total_score ?? 999) ? 'text-success fw-bold fs-5' : 'text-danger fs-5' }}">
-                    {{ $riskB->total_score ?? '-' }}
-                </td>
-
-            </tr>
+        </tr>
 
         </tbody>
 
     </table>
 
+</div>
+
 @php
 
-    $winner = null;
+$winner = null;
 
-    if(($riskA->total_score ?? 999) < ($riskB->total_score ?? 999)){
+if(($riskA->total_score ?? 999) < ($riskB->total_score ?? 999)){
 
-        $winner = $countryA;
+    $winner = $countryA;
 
-    }elseif(($riskA->total_score ?? 999) > ($riskB->total_score ?? 999)){
+}
+elseif(($riskA->total_score ?? 999) > ($riskB->total_score ?? 999)){
 
-        $winner = $countryB;
+    $winner = $countryB;
 
-    }
+}
 
 @endphp
 
@@ -310,9 +318,7 @@
         <div class="card-box text-center">
 
             <h4>
-
-                🏆 Safer Country
-
+                🏆 Recommended Country
             </h4>
 
             <hr>
@@ -325,9 +331,9 @@
 
                 </h2>
 
-                <p>
+                <p class="mb-0">
 
-                    This country has the lower overall supply chain risk score.
+                    Lowest overall supply chain risk.
 
                 </p>
 
@@ -335,13 +341,13 @@
 
                 <h2 class="text-warning">
 
-                    Draw
+                    DRAW
 
                 </h2>
 
-                <p>
+                <p class="mb-0">
 
-                    Both countries have the same total risk score.
+                    Both countries have similar risk levels.
 
                 </p>
 
@@ -365,31 +371,23 @@
 
             @if($winner)
 
-                <p>
-
-                    Based on the weighted risk analysis, <strong>{{ $winner->name }}</strong>
-                    is currently the safer country for supply chain activities.
-
-                </p>
-
-                <ul>
+                <ul class="mb-0">
 
                     <li>Lower overall risk score.</li>
 
-                    <li>Better supply chain stability.</li>
+                    <li>Better weather stability.</li>
 
-                    <li>Recommended for import/export operations.</li>
+                    <li>More favorable economic indicators.</li>
+
+                    <li>Recommended for import and export activities.</li>
 
                 </ul>
 
             @else
 
-                <p>
+                <p class="mb-0">
 
-                    Both countries have similar supply chain risks.
-
-                    Additional monitoring of weather, economy,
-                    and global news is recommended before making decisions.
+                    Continue monitoring both countries before making logistics decisions.
 
                 </p>
 
@@ -398,132 +396,6 @@
         </div>
 
     </div>
-
-</div>
-
-<div class="card-box mt-4">
-
-    <h4>
-
-        Comparison Summary
-
-    </h4>
-
-    <hr>
-
-    <div class="card-box mt-4 text-center">
-
-    <h3>
-
-        Overall Comparison Result
-
-    </h3>
-
-    <hr>
-
-    @if($winner)
-
-        <h1 class="text-success">
-
-            {{ $winner->name }}
-
-        </h1>
-
-        <p>
-
-            Selected as the preferred country based on GDP,
-            Inflation, Weather, Currency, News and Overall Risk.
-
-        </p>
-
-    @else
-
-        <h3 class="text-warning">
-
-            Both Countries Are Comparable
-
-        </h3>
-
-    @endif
-
-</div>
-
-    <table class="table table-bordered">
-
-        <tr>
-
-            <th width="250">
-
-                Lower Risk Score
-
-            </th>
-
-            <td>
-
-                @if($winner)
-
-                    {{ $winner->name }}
-
-                @else
-
-                    Equal
-
-                @endif
-
-            </td>
-
-        </tr>
-
-        <tr>
-
-            <th>
-
-                Better Supply Chain Condition
-
-            </th>
-
-            <td>
-
-                @if($winner)
-
-                    {{ $winner->name }}
-
-                @else
-
-                    Similar
-
-                @endif
-
-            </td>
-
-        </tr>
-
-        <tr>
-
-            <th>
-
-                Recommendation
-
-            </th>
-
-            <td>
-
-                @if($winner)
-
-                    Prioritize logistics operations in
-                    {{ $winner->name }}.
-
-                @else
-
-                    Continue monitoring both countries.
-
-                @endif
-
-            </td>
-
-        </tr>
-
-    </table>
 
 </div>
 

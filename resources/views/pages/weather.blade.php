@@ -204,64 +204,84 @@
             </h2>
 
             <hr>
+<div class="mt-3">
 
-            <table class="table table-dark">
+    <div class="d-flex justify-content-between mb-2">
+        <span>Country</span>
+        <strong>{{ $country->name }}</strong>
+    </div>
 
-                <tr>
+    <div class="d-flex justify-content-between mb-2">
+        <span>🌡 Temperature</span>
+        <strong>{{ number_format($weather->temperature ?? 0,1) }} °C</strong>
+    </div>
 
-                    <td>Country</td>
+    <div class="d-flex justify-content-between mb-2">
+        <span>🌧 Rainfall</span>
+        <strong>{{ number_format($weather->rainfall ?? 0,1) }} mm</strong>
+    </div>
 
-                    <td>{{ $country->name }}</td>
+    <div class="d-flex justify-content-between mb-2">
+        <span>💨 Wind Speed</span>
+        <strong>{{ number_format($weather->wind_speed ?? 0,1) }} km/h</strong>
+    </div>
 
-                </tr>
+    <div class="d-flex justify-content-between mb-2">
+        <span>⛈ Storm Risk</span>
+        <strong>{{ $weather->storm_risk ?? 0 }} %</strong>
+    </div>
 
-                <tr>
+    <div class="d-flex justify-content-between">
+        <span>Risk Level</span>
 
-                    <td>Temperature</td>
+        <span class="badge bg-success px-3">
 
-                    <td>{{ number_format($weather->temperature ?? 0,1) }} °C</td>
+            {{ $risk->risk_level ?? '-' }}
 
-                </tr>
+        </span>
+    </div>
 
-                <tr>
+</div>
 
-                    <td>Rainfall</td>
+        </div>
 
-                    <td>{{ number_format($weather->rainfall ?? 0,1) }} mm</td>
+        <!-- Weather Legend -->
+        <div class="card-box mt-4">
 
-                </tr>
+            <h5 class="mb-3">Weather Legend</h5>
 
-                <tr>
+            <div class="d-flex align-items-center mb-2">
+                <span class="me-2 rounded-circle"
+                    style="width:12px;height:12px;background:#06D6A0;"></span>
+                <small>Normal Weather</small>
+            </div>
 
-                    <td>Wind Speed</td>
+            <div class="d-flex align-items-center mb-2">
+                <span class="me-2 rounded-circle"
+                    style="width:12px;height:12px;background:#FFD166;"></span>
+                <small>Heavy Rain</small>
+            </div>
 
-                    <td>{{ number_format($weather->wind_speed ?? 0,1) }} km/h</td>
+            <div class="d-flex align-items-center mb-2">
+                <span class="me-2 rounded-circle"
+                    style="width:12px;height:12px;background:#F77F00;"></span>
+                <small>Strong Wind</small>
+            </div>
 
-                </tr>
-
-                <tr>
-
-                    <td>Storm Risk</td>
-
-                    <td>{{ $weather->storm_risk ?? 0 }} %</td>
-
-                </tr>
-
-                <tr>
-
-                    <td>Risk Level</td>
-
-                    <td>{{ $risk->risk_level ?? '-' }}</td>
-
-                </tr>
-
-            </table>
+            <div class="d-flex align-items-center">
+                <span class="me-2 rounded-circle"
+                    style="width:12px;height:12px;background:#EF476F;"></span>
+                <small>Storm Warning</small>
+            </div>
 
         </div>
 
     </div>
 
+    </div>
+
 </div>
+
 
 @endsection
 
@@ -285,11 +305,9 @@ L.tileLayer(
 
 
 
-let weatherData = @json($allWeather);
+let item = @json($selectedWeather);
 
-weatherData.forEach(function(item){
-
-    if(!item.country) return;
+if(item && item.country){
 
     let color = "#06D6A0";
     let status = "Normal";
@@ -313,145 +331,42 @@ weatherData.forEach(function(item){
 
     }
 
-    let radius = 8;
-    let weight = 2;
-
-    // Highlight active country
-
-    if(item.country_id == {{ $country->id }}){
-
-        radius = 14;
-        weight = 4;
-
-    }
-
-    L.circleMarker(
-
+    map.setView(
         [
-
             item.country.latitude,
-
             item.country.longitude
-
         ],
-
-        {
-
-            radius:radius,
-
-            color:"#00F5D4",
-
-            weight:weight,
-
-            fillColor:color,
-
-            fillOpacity:.9
-
-        }
-
-    )
-
-    .addTo(map)
-
-    .bindPopup(
-
-        `
-
-        <h5>${item.country.name}</h5>
-
-        <hr>
-
-        <b>Status :</b>
-
-        ${status}
-
-        <br><br>
-
-        🌡 Temperature :
-
-        ${item.temperature} °C
-
-        <br>
-
-        🌧 Rainfall :
-
-        ${item.rainfall} mm
-
-        <br>
-
-        💨 Wind :
-
-        ${item.wind_speed} km/h
-
-        <br>
-
-        ⛈ Storm Risk :
-
-        ${item.storm_risk} %
-
-        `
-
+        5
     );
 
-});
+    L.circleMarker(
+        [
+            item.country.latitude,
+            item.country.longitude
+        ],
+        {
+            radius:14,
+            color:"#00F5D4",
+            weight:4,
+            fillColor:color,
+            fillOpacity:.9
+        }
+    )
+    .addTo(map)
+    .bindPopup(`
+        <h5>${item.country.name}</h5>
+        <hr>
+        <b>Status :</b> ${status}<br><br>
+        🌡 Temperature : ${item.temperature} °C<br>
+        🌧 Rainfall : ${item.rainfall} mm<br>
+        💨 Wind : ${item.wind_speed} km/h<br>
+        ⛈ Storm Risk : ${item.storm_risk} %
+    `)
+    .openPopup();
+
+}
 
 
-
-// Legend
-
-var legend = L.control({
-
-position:'bottomright'
-
-});
-
-legend.onAdd = function(){
-
-var div = L.DomUtil.create('div');
-
-div.style.background="#0E2238";
-div.style.padding="12px";
-div.style.color="white";
-div.style.borderRadius="10px";
-div.style.border="1px solid #00D9D5";
-
-div.innerHTML=
-
-`
-
-<b>Weather Legend</b>
-
-<br><br>
-
-<span style="color:#06D6A0;">●</span> Normal
-
-<br>
-
-<span style="color:#FFD166;">●</span> Heavy Rain
-
-<br>
-
-<span style="color:#F77F00;">●</span> Strong Wind
-
-<br>
-
-<span style="color:#EF476F;">●</span> Storm Warning
-
-<br><br>
-
-<b>Selected Country</b>
-
-=
-
-Large Marker
-
-`;
-
-return div;
-
-};
-
-legend.addTo(map);
 
 </script>
 

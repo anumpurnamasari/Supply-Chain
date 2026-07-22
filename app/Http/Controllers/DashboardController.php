@@ -167,10 +167,8 @@ $this->currencyService->syncCurrency($country);
         ->first();
 
     $economic = EconomicData::where('country_id', $country->id)
-    ->where(function ($q) {
-        $q->where('gdp', '>', 0)
-          ->orWhere('inflation', '>', 0);
-    })
+    ->where('gdp', '>', 0)
+    ->where('inflation', '>', 0)
     ->latest()
     ->first();
 
@@ -244,11 +242,14 @@ public function countryData(Country $country)
         ->first();
 
     $economic = EconomicData::where('country_id', $country->id)
-        ->latest()
-        ->first();
+    ->where('gdp', '>', 0)
+    ->where('inflation', '>', 0)
+    ->latest()
+    ->first();
 
     $economicTrend = EconomicData::where('country_id', $country->id)
     ->where('gdp', '>', 0)
+    ->where('inflation', '>', 0)
     ->orderBy('created_at', 'asc')
     ->get();
 

@@ -14,10 +14,10 @@
 
 </div>
 
-
-
+{{-- SUMMARY CARD --}}
 <div class="row g-4">
 
+    {{-- Exchange Rate --}}
     <div class="col-md-3">
 
         <div class="card-box text-center">
@@ -27,99 +27,74 @@
             </h5>
 
             <h2>
-
-                {{ number_format($currency->exchange_rate ?? 0,2) }}
-
+                {{ number_format($currency->exchange_rate ?? 0, 2) }}
             </h2>
 
             <span>
-
-                USD / {{ $currency->currency ?? '-' }}
-
+                USD / {{ $country->currency }}
             </span>
 
         </div>
 
     </div>
 
-
-
+    {{-- Currency --}}
     <div class="col-md-3">
 
         <div class="card-box text-center">
 
             <h5>
-
                 Currency
-
             </h5>
 
             <h2>
-
                 {{ $country->currency }}
-
             </h2>
 
             <span>
-
                 Country Currency
-
             </span>
 
         </div>
 
     </div>
 
-
-
+    {{-- Risk Score --}}
     <div class="col-md-3">
 
         <div class="card-box text-center">
 
             <h5>
-
                 Risk Score
-
             </h5>
 
             <h2>
-
-                {{ $currency->currency_risk ?? 0 }}
-
+                {{ $risk->currency_score ?? 0 }}
             </h2>
 
             <span>
-
                 Currency Risk
-
             </span>
 
         </div>
 
     </div>
 
-
-
+    {{-- Last Update --}}
     <div class="col-md-3">
 
         <div class="card-box text-center">
 
             <h5>
-
                 Last Update
-
             </h5>
 
             <h2>
-
                 {{ optional($currency)->updated_at?->format('H:i') ?? '--:--' }}
-
             </h2>
 
             <span>
-
                 {{ optional($currency)->updated_at?->format('d M Y') ?? '-' }}
-
             </span>
 
         </div>
@@ -128,20 +103,16 @@
 
 </div>
 
-
-
-
-
+{{-- CHART + INFORMATION --}}
 <div class="row g-4 mt-2">
 
+    {{-- Trend Chart --}}
     <div class="col-md-8">
 
         <div class="card-box">
 
             <h5>
-
                 Exchange Rate Trend
-
             </h5>
 
             <canvas id="currencyChart"></canvas>
@@ -150,75 +121,61 @@
 
     </div>
 
-
-
+    {{-- Currency Information --}}
     <div class="col-md-4">
 
         <div class="card-box">
 
             <h5>
-
                 Currency Information
-
             </h5>
 
             <br>
 
-            <table class="table table-borderless text-white">
+                    <div class="mt-3">
 
-                <tr>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Country</span>
+                    <strong>{{ $country->name }}</strong>
+                </div>
 
-                    <td width="45%">Country</td>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Currency</span>
+                    <strong>{{ $country->currency }}</strong>
+                </div>
 
-                    <td>{{ $country->name }}</td>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Exchange Rate</span>
+                    <strong>{{ number_format($currency->exchange_rate ?? 0,2) }}</strong>
+                </div>
 
-                </tr>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Currency Risk</span>
 
-                <tr>
+                    <span class="badge
+                        @if(($risk->currency_score ?? 0) >= 70)
+                            bg-danger
+                        @elseif(($risk->currency_score ?? 0) >= 40)
+                            bg-warning text-dark
+                        @else
+                            bg-success
+                        @endif
+                        px-3 py-2">
 
-                    <td>Currency</td>
+                        {{ $risk->currency_score ?? 0 }}
 
-                    <td>{{ $country->currency }}</td>
+                    </span>
 
-                </tr>
+                </div>
 
-                <tr>
-
-                    <td>Exchange Rate</td>
-
-                    <td>
-
-                        {{ number_format($currency->exchange_rate ?? 0,2) }}
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>Currency Risk</td>
-
-                    <td>
-
-                        {{ $currency->currency_risk ?? 0 }}
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>Last Update</td>
-
-                    <td>
-
+                <div class="d-flex justify-content-between">
+                    <span>Last Update</span>
+                    <strong>
                         {{ optional($currency)->updated_at?->format('d M Y H:i') ?? '-' }}
+                    </strong>
+                </div>
 
-                    </td>
-
-                </tr>
-
-            </table>
+            </div>
 
         </div>
 
@@ -227,8 +184,6 @@
 </div>
 
 @endsection
-
-
 
 
 @section('script')

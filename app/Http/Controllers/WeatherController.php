@@ -39,8 +39,11 @@ class WeatherController extends Controller
     ->latest()
     ->first();
 
-    // GLOBAL WEATHER
-    $allWeather = WeatherData::with('country')->get();
+    // Selected Country Weather
+    $selectedWeather = WeatherData::with('country')
+        ->where('country_id', $country->id)
+        ->latest()
+        ->first();
 
     return view(
         'pages.weather',
@@ -48,7 +51,7 @@ class WeatherController extends Controller
             'country',
             'weather',
             'risk',
-            'allWeather'
+            'selectedWeather'
         )
     );
     }

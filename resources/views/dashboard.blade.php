@@ -309,25 +309,11 @@ Supply Chain Risk Composition
 
 
 <h5>
-🌍 Global Risk Monitoring Map
+Global Risk Monitoring Map
 </h5>
 
 
 <div id="map"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </div>
 
@@ -535,6 +521,7 @@ Supply Chain Risk Composition
 const economicTrend = @json($economicTrend);
 const currencyTrend = @json($currencyTrend);
 const riskTrend = @json($riskTrend);
+console.log(economicTrend);
 
 const riskChart = new Chart(
     document.getElementById('riskChart'),
